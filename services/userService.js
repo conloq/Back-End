@@ -16,9 +16,7 @@ class UserService{
     }
 
     async showUser(id) {
-        const newUser = await User.findByPk(id, {
-            attributes: {exclude: ['password']}
-        });
+        const newUser = await User.findByPk(id);
 
         if(!newUser) throw new Error("ID_NOT_EXISTS");
 

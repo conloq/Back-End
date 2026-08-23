@@ -22,7 +22,7 @@ const createUser = async (req, res) => {
 
 const showUser = async (req, res) => {
     try {
-        const id = req.params.id;
+        const id = req.userId;
 
         if(!id) return res.status(400).json({message:"ID não informado"});
         if(isNaN(id)) return res.status(400).json({message:"Id deve conter apenas números"});
@@ -41,7 +41,7 @@ const showUser = async (req, res) => {
 
 const deleteUser = async (req,res) => {
     try {
-        const id = req.params.id;
+        const id = req.userId;
 
         if(!id) return res.status(400).json({message:"ID não informado"});
         if(isNaN(id)) return res.status(400).json({message:"Id deve conter apenas números"});
