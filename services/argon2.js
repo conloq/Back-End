@@ -13,5 +13,6 @@ export async function createHash(password) {
         return hash
     } catch (error) {
         console.log(`Ocorreu um erro ao gerar o hash de senha: ${error}`);
+        throw new Error("HASH_GENERATION_FAILED");
     }
 }

@@ -9,6 +9,7 @@ const User = Connection.define('user',{
     email: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true
     },
     fone: {
        type: Sequelize.STRING,
