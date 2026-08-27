@@ -2,11 +2,11 @@ import { Sequelize } from "sequelize";
 
 const Connection = new Sequelize({
     dialect: "mysql",
-    host: "localhost",
-    username: "root",
-    password: "",
+    host: process.env.DB_HOST,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
     timezone: "-03:00",
-    database: "mash"
 })
 
 export default Connection;
