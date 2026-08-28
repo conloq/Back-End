@@ -57,4 +57,27 @@ const deleteUser = async (req,res) => {
     }
 }
 
-export {createUser, showUser, deleteUser};
+const updateUser = async (req,res) => {
+    try {
+        const {name, email, fone, password} = req.body;
+        const id = req.userId;
+
+        if(!id) return res.status(400).json({message:"ID not provided"});
+        if(isNaN(id)) return res.status(400).json({message:"ID should contain only numbers"});
+
+        if(!password){
+            await userService.updateUser(id, name, email, fone);
+            return res.status(200).json({message: "User updated successfully"});
+        }
+    
+        const hashPassword = await createHash(password);
+        await userService.updateUser(id, name, email, fone, hashPassword);
+        return res.status(200).json({message: "User updated successfully"});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error:"Internal server error"});
+    }
+
+}
+
+export {createUser, showUser, deleteUser, updateUser};

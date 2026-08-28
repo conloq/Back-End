@@ -12,7 +12,7 @@ class AuthService {
 
         const isValidPassword = await argon2.verify(user.password, password);
 
-        const secretKey = process.env.JWT_SCRET_KEY;
+        const secretKey = process.env.JWT_SECRET_KEY;
 
         const token = jwt.sign(
             {id: user.id, email: user.email},
