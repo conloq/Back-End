@@ -38,6 +38,13 @@ class UserService{
         const update = await User.update({name, email, fone, password}, {where:{id}});
         return update;
     }
+
+    async  updateImage(id, url) {
+        const updadeImage = await User.update({url_image: url}, {where:{id}});
+
+        if (updated === 0) throw new Error("ID_NOT_EXISTS");
+        return updadeImage;
+    }
 }
 
 

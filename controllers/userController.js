@@ -1,5 +1,6 @@
 import userService from "../services/userService.js";
 import { createHash } from "../services/argon2.js";
+import cloudinary from "../config/cloudinary.js";
 
 const createUser = async (req, res) => {
     try {
@@ -80,4 +81,40 @@ const updateUser = async (req,res) => {
 
 }
 
-export {createUser, showUser, deleteUser, updateUser};
+const updateImage = async (req, res) => {
+    try {
+        const id = req.userId;
+        const imageUser = req.file;
+        
+        if(!id) return res.status(400).json({message:"ID not provided"});
+        if(isNaN(id)) return res.status(400).json({message:"ID should contain only numbers"});
+
+        if(!imageUser) return res.status(400).json({message:"Image not provided"});
+
+        const resultCloudinary = await new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+                {
+                    folder: "Users Mash"
+                },
+                (error, result) => {
+                    if(error) return reject(error);
+                    resolve(result)
+                }
+            );
+            stream.end(imageUser.buffer);
+        });
+
+        const user = await userService.updateImage(id, resultCloudinary.secure_url);
+
+        return res.status(200).json({message: "Imagem enviada com sucesso!", url: resultCloudinary.secure_url});
+        
+    } catch (error) {
+        console.error(error);
+        if (error.message === "ID_NOT_EXISTS") {
+            return res.status(404).json({error: "ID does not exist"});
+        }
+        res.status(500).json({error:"Internal server error"});
+    }
+}
+
+export {createUser, showUser, deleteUser, updateUser, updateImage};
