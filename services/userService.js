@@ -40,10 +40,10 @@ class UserService{
     }
 
     async  updateImage(id, url) {
-        const updadeImage = await User.update({url_image: url}, {where:{id}});
+        const updateImage = await User.update({url_image: url}, {where:{id}});
 
-        if (updated === 0) throw new Error("ID_NOT_EXISTS");
-        return updadeImage;
+        if (updateImage === 0) throw new Error("ID_NOT_EXISTS");
+        return updateImage;
     }
 }
 

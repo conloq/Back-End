@@ -104,7 +104,7 @@ const updateImage = async (req, res) => {
             stream.end(imageUser.buffer);
         });
 
-        const user = await userService.updateImage(id, resultCloudinary.secure_url);
+        await userService.updateImage(id, resultCloudinary.secure_url);
 
         return res.status(200).json({message: "Imagem enviada com sucesso!", url: resultCloudinary.secure_url});
         

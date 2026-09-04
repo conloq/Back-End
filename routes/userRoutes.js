@@ -13,6 +13,6 @@ router.get("/user", authMiddleware, showUser);
 router.delete("/user", authMiddleware, deleteUser);
 router.put("/user", authMiddleware, updateUser);
 
-router.post("/user/upload", upload.single("imageUser", updateImage));
+router.put("/user/upload", authMiddleware, upload.single("imageUser"), updateImage);
 
 export default router;
