@@ -4,29 +4,38 @@ import cloudinary from "../config/cloudinary.js";
 
 const createUser = async (req, res) => {
     try {
-        const {name, email} = req.body;
-        const password = await createHash(req.body.password);
+        const {name = "", email = "", password = ""} = req.body;
 
-        await userService.createUser(name, email, password);
+        const cleanName = name.trim();
+        const cleanEmail = email.trim().toLowerCase();
+
+        if(!cleanName || !cleanEmail) return res.status(400).json({message:"name or email missing"});
+
+        if(!cleanEmail.endsWith("@gmail.com")) return res.status(400).json({message:"Only gmail accounts are allowed"});
+
+        if(!password) return res.status(400).json({message: "Password cannot be empty"});
+
+        if(/\s/.test(password)) return res.status(400).json({ message: "Password cannot contain spaces" });
+
+        const passwordHash = await createHash(password);
+
+        await userService.createUser(cleanName, cleanEmail, passwordHash);
 
         res.status(201).json({message:"User created successfully"});
     } catch (error) {
         console.error(error.message);
 
         if(error.message === 'EMAIL_EXISTS') {
-            return res.status(409).json({error:"Existing email"});
+            return res.status(409).json({message:"Existing email"});
         }
 
-        res.status(500).json({error:"Internal server error"});
+        res.status(500).json({message:"Internal server error"});
     }
 }
 
 const showUser = async (req, res) => {
     try {
         const id = req.userId;
-
-        if(!id) return res.status(400).json({message:"ID not provided"});
-        if(isNaN(id)) return res.status(400).json({message:"ID should contain only numbers"});
         
         const user = await userService.showUser(id);
         res.status(200).json({user: user});
@@ -34,9 +43,9 @@ const showUser = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         if(error.message === "ID_NOT_EXISTS") {
-            return res.status(404).json({error:"ID does not exist"});
+            return res.status(404).json({message:"ID does not exist"});
         }
-        res.status(500).json({error:"Internal server error"});
+        res.status(500).json({message:"Internal server error"});
     }
 }
 
@@ -44,50 +53,47 @@ const deleteUser = async (req,res) => {
     try {
         const id = req.userId;
 
-        if(!id) return res.status(400).json({message:"ID not provided"});
-        if(isNaN(id)) return res.status(400).json({message:"ID should contain only numbers"});
-
         await userService.deleteUser(id);
         res.status(200).json({message:"User deleted"});
     } catch (error) {
         console.error(error.message);
-        if(error.message === "ID_NOT_EXISTS"){
-            return res.status(404).json({error:"ID does not exist"});
-        }
-        res.status(500).json({error:"Internal server error"});  
+        res.status(500).json({message:"Internal server error"});  
     }
 }
 
 const updateUser = async (req,res) => {
     try {
-        const {name, email, fone, password} = req.body;
+        const {name = "", email = "", fone = "", password} = req.body;
         const id = req.userId;
 
-        if(!id) return res.status(400).json({message:"ID not provided"});
-        if(isNaN(id)) return res.status(400).json({message:"ID should contain only numbers"});
+        const cleanName = name.trim();
+        const cleanEmail = email.trim().toLowerCase();
 
+        if(!cleanName || !cleanEmail) return res.status(400).json({message:"name or email missing"});
+
+        if(password){   
+            if(/\s/.test(password)) return res.status(400).json({ message: "Password cannot contain spaces" });
+        }
+
+        
         if(!password){
-            await userService.updateUser(id, name, email, fone);
+            await userService.updateUser(id, cleanName, cleanEmail, fone);
             return res.status(200).json({message: "User updated successfully"});
         }
     
         const hashPassword = await createHash(password);
-        await userService.updateUser(id, name, email, fone, hashPassword);
+        await userService.updateUser(id, cleanName, cleanEmail, fone, hashPassword);
         return res.status(200).json({message: "User updated successfully"});
     } catch (error) {
         console.error(error);
-        res.status(500).json({error:"Internal server error"});
+        res.status(500).json({message:"Internal server error"});
     }
-
 }
 
 const updateImage = async (req, res) => {
     try {
         const id = req.userId;
         const imageUser = req.file;
-        
-        if(!id) return res.status(400).json({message:"ID not provided"});
-        if(isNaN(id)) return res.status(400).json({message:"ID should contain only numbers"});
 
         if(!imageUser) return res.status(400).json({message:"Image not provided"});
 
@@ -105,15 +111,11 @@ const updateImage = async (req, res) => {
         });
 
         await userService.updateImage(id, resultCloudinary.secure_url);
-
         return res.status(200).json({message: "Imagem enviada com sucesso!", url: resultCloudinary.secure_url});
         
     } catch (error) {
         console.error(error);
-        if (error.message === "ID_NOT_EXISTS") {
-            return res.status(404).json({error: "ID does not exist"});
-        }
-        res.status(500).json({error:"Internal server error"});
+        res.status(500).json({message:"Internal server error"});
     }
 }
 

@@ -25,11 +25,9 @@ class UserService{
         const destroy = await User.destroy({
             where: {id}
         });
-
-        if(destroy === 0) throw new Error("ID_NOT_EXISTS");
     }
 
-    async updateUser(id, name, email, fone = "", password) {
+    async updateUser(id, name, email, fone, password) {
         if(!password) {
             const update = await User.update({name, email, fone}, {where:{id}});
             return update;
@@ -41,8 +39,6 @@ class UserService{
 
     async  updateImage(id, url) {
         const updateImage = await User.update({url_image: url}, {where:{id}});
-
-        if (updateImage === 0) throw new Error("ID_NOT_EXISTS");
         return updateImage;
     }
 }

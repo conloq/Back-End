@@ -8,7 +8,7 @@ const showRecipe = async (req, res) => {
 
         const id = req.userId;
         const recipe = await RecipeUser.showRecipe(id);
-    return res.status(200).json({recipe})
+    return res.status(200).json({recipe});
     } catch (error) {
         console.error(error.message);
         if(error.message === "ID_NOT_EXISTS") {
@@ -27,7 +27,8 @@ const createRecipe = async (req, res) => {
         res.status(201).json({message:"Recipe created successfully"});
     } catch (error) {
         console.error(error.message);
+        res.status(500).json({error:"Internal server error"});
     }
 }
 
-export {showRecipe};
+export {showRecipe, createRecipe};
