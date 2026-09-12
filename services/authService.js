@@ -12,6 +12,8 @@ class AuthService {
 
         const isValidPassword = await argon2.verify(user.password, password);
 
+        if(!isValidPassword) throw new Error("INVALID_CREDENTIAL");
+        
         const secretKey = process.env.JWT_SECRET_KEY;
 
         const token = jwt.sign(
