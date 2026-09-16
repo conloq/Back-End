@@ -2,12 +2,12 @@ import RecipeUser from "../services/recipeService.js";
 
 const showRecipe = async (req, res) => {
     try {
+        const id = req.userId;
 
         if(!id) return res.status(400).json({message:"ID not provided"});
         if(isNaN(id)) return res.status(400).json({message:"ID should contain only numbers"});
 
-        const id = req.userId;
-        const recipe = await RecipeUser.showRecipe(id);
+        const recipe = await RecipeUser.showRecipes(id);
     return res.status(200).json({recipe});
     } catch (error) {
         console.error(error.message);

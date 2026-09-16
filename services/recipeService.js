@@ -17,4 +17,4 @@ class RecipeUser{
 
 }
 
-export default RecipeUser;
+export default new RecipeUser;
