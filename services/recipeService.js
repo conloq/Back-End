@@ -26,7 +26,7 @@ class RecipeUser{
         if(destroy === 0) throw new Error("ID_NOT_EXISTING");
     }
 
-    async updateUser(nameRecipe, recipeId) {
+    async updateUser(recipeId, nameRecipe) {
         const update = await Recipe.update({nome: nameRecipe}, {where: {id: recipeId}})
     }
 }

@@ -67,7 +67,7 @@ const updateRecipe = async (req, res) => {
 
         if(recipe.user_id != userId) return res.status(403).json({message:"action not allowed"});
 
-        await RecipeUser.updateUser(nameRecipe, recipeId);
+        await RecipeUser.updateUser(recipeId, nameRecipe);
         return res.status(200).json({message: "Recipe updated successfully"});
     } catch (error) {
         console.log(error.message);
