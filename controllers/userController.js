@@ -9,7 +9,7 @@ const createUser = async (req, res) => {
         const cleanName = name.trim();
         const cleanEmail = email.trim().toLowerCase();
 
-        if(!cleanName || !cleanEmail) return res.status(400).json({message:"name or email missing"});
+        if(!cleanName || !cleanEmail) return res.status(400).json({message:"Name or email missing"});
 
         if(!cleanEmail.endsWith("@gmail.com")) return res.status(400).json({message:"Only gmail accounts are allowed"});
 
@@ -42,9 +42,7 @@ const showUser = async (req, res) => {
 
     } catch (error) {
         console.error(error.message);
-        if(error.message === "ID_NOT_EXISTS") {
-            return res.status(404).json({message:"ID does not exist"});
-        }
+        if(error.message === "ID_NOT_EXISTS") return res.status(404).json({message:"ID does not exist"});
         res.status(500).json({message:"Internal server error"});
     }
 }

@@ -22,7 +22,7 @@ class UserService{
     }
 
     async deleteUser(id) {
-        const destroy = await User.destroy({
+        await User.destroy({
             where: {id}
         });
     }

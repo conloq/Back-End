@@ -2,27 +2,24 @@ import RecipeUser from "../services/recipeService.js";
 
 const showRecipe = async (req, res) => {
     try {
-        const id = req.userId;
+        const userId = req.userId;
 
-        if(!id) return res.status(400).json({message:"ID not provided"});
-        if(isNaN(id)) return res.status(400).json({message:"ID should contain only numbers"});
-
-        const recipe = await RecipeUser.showRecipes(id);
+        const recipe = await RecipeUser.showRecipes(userId);
     return res.status(200).json({recipe});
     } catch (error) {
         console.error(error.message);
-        if(error.message === "ID_NOT_EXISTS") {
-            return res.status(404).json({error:"ID does not exist"});
-        }
         res.status(500).json({error:"Internal server error"});
     }
 }
 
 const createRecipe = async (req, res) => {
     try {
-        const id = req.userId;
-        const name = req.body.nameRecipe;
-        await RecipeUser.createRecipe(name, id);
+        const userId = req.userId;
+        const nameRecipe = req.body.nameRecipe;
+        
+        if(!nameRecipe) return res.status(400).json({message:"Name missing"});
+
+        await RecipeUser.createRecipe(nameRecipe, userId);
 
         res.status(201).json({message:"Recipe created successfully"});
     } catch (error) {
@@ -31,4 +28,51 @@ const createRecipe = async (req, res) => {
     }
 }
 
-export {showRecipe, createRecipe};
+const deleteRecipe = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const recipeId = req.params.recipeId;
+
+        if(!recipeId) return res.status(400).json({message:"Id Recipe missing"});
+
+        const recipe = await RecipeUser.showOneRecipe(recipeId);
+
+        if(!recipe) return res.status(400).json({message:"Recipe not found"});
+
+        console.log(recipe);
+
+        if(recipe.user_id != userId) return res.status(403).json({message:"action not allowed"});
+
+        await RecipeUser.deleteRecipe(recipeId, userId);
+
+        return res.status(200).json({message:"Recipe deleted"});
+    } catch (error) {
+        console.error(error.message);
+        if(error.message === "ID_NOT_EXISTING") return res.status(404).json({message:"ID does not exist"});
+        res.status(500).json({error:"Internal server error"});
+    }
+}
+
+const updateRecipe = async (req, res) => {
+    try {
+        const {nameRecipe} = req.body;
+        const userId = req.userId;
+        const recipeId = req.params.recipeId;
+
+        if(!recipeId || !nameRecipe) return res.status(400).json({message:"Id or name Recipe missing"});
+
+        const recipe = await RecipeUser.showOneRecipe(recipeId);
+
+        if(!recipe) return res.status(400).json({message:"Recipe not found"});
+
+        if(recipe.user_id != userId) return res.status(403).json({message:"action not allowed"});
+
+        await RecipeUser.updateUser(nameRecipe, recipeId);
+        return res.status(200).json({message: "Recipe updated successfully"});
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({error:"Internal server error"});
+    }
+}
+
+export {showRecipe, createRecipe, deleteRecipe, updateRecipe};
