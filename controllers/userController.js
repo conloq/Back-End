@@ -9,13 +9,13 @@ const createUser = async (req, res) => {
         const cleanName = name.trim();
         const cleanEmail = email.trim().toLowerCase();
 
-        if(!cleanName || !cleanEmail) return res.status(400).json({message:"Nome ou E-mail não podem estar vazios"});
+        if(!cleanName || !cleanEmail) return res.status(400).json({error:"Nome ou E-mail não podem estar vazios"});
 
-        if(!cleanEmail.endsWith("@gmail.com")) return res.status(400).json({message:"Apenas contas E-mail são permitidas"});
+        if(!cleanEmail.endsWith("@gmail.com")) return res.status(400).json({error:"Apenas contas E-mail são permitidas"});
 
-        if(!password) return res.status(400).json({message: "A senha não pode ser vazia"});
+        if(!password) return res.status(400).json({error: "A senha não pode ser vazia"});
 
-        if(/\s/.test(password)) return res.status(400).json({ message: "A senha não pode conter espaços"});
+        if(/\s/.test(password)) return res.status(400).json({ error: "A senha não pode conter espaços"});
 
         const passwordHash = await createHash(password);
 
@@ -26,7 +26,7 @@ const createUser = async (req, res) => {
         console.error(error.message);
 
         if(error.message === 'EMAIL_EXISTS') {
-            return res.status(409).json({message:"E-mail já existente"});
+            return res.status(409).json({error:"E-mail já existente"});
         }
 
         res.status(500).json({error:"Erro interno do servidor"});
@@ -42,8 +42,8 @@ const showUser = async (req, res) => {
 
     } catch (error) {
         console.error(error.message);
-        if(error.message === "ID_NOT_EXISTS") return res.status(404).json({message:"ID não existe"});
-        res.status(500).json({message:"Erro interno do servidor"});
+        if(error.message === "ID_NOT_EXISTS") return res.status(404).json({error:"ID não existe"});
+        res.status(500).json({error:"Erro interno do servidor"});
     }
 }
 
@@ -67,10 +67,10 @@ const updateUser = async (req,res) => {
         const cleanName = name.trim();
         const cleanEmail = email.trim().toLowerCase();
 
-        if(!cleanName || !cleanEmail) return res.status(400).json({message:"Nome ou E-mail não podem estar vazios"});
+        if(!cleanName || !cleanEmail) return res.status(400).json({error:"Nome ou E-mail não podem estar vazios"});
 
         if(password){   
-            if(/\s/.test(password)) return res.status(400).json({ message: "A senha não pode conter espaços"});
+            if(/\s/.test(password)) return res.status(400).json({ error: "A senha não pode conter espaços"});
         }
 
         

@@ -3,7 +3,8 @@ import Recipe from "../models/recipeModel.js";
 class RecipeUser{
     
     async createRecipe(nameRecipe, idUser) {
-        await Recipe.create({nome: nameRecipe, user_id: idUser});
+        const recipe = await Recipe.create({nome: nameRecipe, user_id: idUser});
+        return recipe;
     }
 
     async showRecipes(idUser) {
