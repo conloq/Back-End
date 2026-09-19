@@ -9,27 +9,27 @@ const createUser = async (req, res) => {
         const cleanName = name.trim();
         const cleanEmail = email.trim().toLowerCase();
 
-        if(!cleanName || !cleanEmail) return res.status(400).json({message:"Name or email missing"});
+        if(!cleanName || !cleanEmail) return res.status(400).json({message:"Nome ou E-mail não podem estar vazios"});
 
-        if(!cleanEmail.endsWith("@gmail.com")) return res.status(400).json({message:"Only gmail accounts are allowed"});
+        if(!cleanEmail.endsWith("@gmail.com")) return res.status(400).json({message:"Apenas contas E-mail são permitidas"});
 
-        if(!password) return res.status(400).json({message: "Password cannot be empty"});
+        if(!password) return res.status(400).json({message: "A senha não pode ser vazia"});
 
-        if(/\s/.test(password)) return res.status(400).json({ message: "Password cannot contain spaces" });
+        if(/\s/.test(password)) return res.status(400).json({ message: "A senha não pode conter espaços"});
 
         const passwordHash = await createHash(password);
 
         await userService.createUser(cleanName, cleanEmail, passwordHash);
 
-        res.status(201).json({message:"User created successfully"});
+        res.status(201).json({message:"Usuário criado com sucesso"});
     } catch (error) {
         console.error(error.message);
 
         if(error.message === 'EMAIL_EXISTS') {
-            return res.status(409).json({message:"Existing email"});
+            return res.status(409).json({message:"E-mail já existente"});
         }
 
-        res.status(500).json({message:"Internal server error"});
+        res.status(500).json({error:"Erro interno do servidor"});
     }
 }
 
@@ -42,8 +42,8 @@ const showUser = async (req, res) => {
 
     } catch (error) {
         console.error(error.message);
-        if(error.message === "ID_NOT_EXISTS") return res.status(404).json({message:"ID does not exist"});
-        res.status(500).json({message:"Internal server error"});
+        if(error.message === "ID_NOT_EXISTS") return res.status(404).json({message:"ID não existe"});
+        res.status(500).json({message:"Erro interno do servidor"});
     }
 }
 
@@ -52,10 +52,10 @@ const deleteUser = async (req,res) => {
         const id = req.userId;
 
         await userService.deleteUser(id);
-        res.status(200).json({message:"User deleted"});
+        res.status(204);
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({message:"Internal server error"});  
+        res.status(500).json({error:"Erro interno do servidor"});  
     }
 }
 
@@ -67,24 +67,24 @@ const updateUser = async (req,res) => {
         const cleanName = name.trim();
         const cleanEmail = email.trim().toLowerCase();
 
-        if(!cleanName || !cleanEmail) return res.status(400).json({message:"name or email missing"});
+        if(!cleanName || !cleanEmail) return res.status(400).json({message:"Nome ou E-mail não podem estar vazios"});
 
         if(password){   
-            if(/\s/.test(password)) return res.status(400).json({ message: "Password cannot contain spaces" });
+            if(/\s/.test(password)) return res.status(400).json({ message: "A senha não pode conter espaços"});
         }
 
         
         if(!password){
             await userService.updateUser(id, cleanName, cleanEmail, fone);
-            return res.status(200).json({message: "User updated successfully"});
+            return res.status(200).json({message: "Usuário atualizado com sucesso"});
         }
     
         const hashPassword = await createHash(password);
         await userService.updateUser(id, cleanName, cleanEmail, fone, hashPassword);
-        return res.status(200).json({message: "User updated successfully"});
+        return res.status(200).json({message: "Usuário atualizado com sucesso"});
     } catch (error) {
         console.error(error);
-        res.status(500).json({message:"Internal server error"});
+        res.status(500).json({error:"Erro interno do servidor"});
     }
 }
 
@@ -93,7 +93,7 @@ const updateImage = async (req, res) => {
         const id = req.userId;
         const imageUser = req.file;
 
-        if(!imageUser) return res.status(400).json({message:"Image not provided"});
+        if(!imageUser) return res.status(400).json({message:"Imagem não foi enviada"});
 
         const resultCloudinary = await new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(
@@ -113,7 +113,7 @@ const updateImage = async (req, res) => {
         
     } catch (error) {
         console.error(error);
-        res.status(500).json({message:"Internal server error"});
+        res.status(500).json({error:"Erro interno do servidor"});
     }
 }
 
