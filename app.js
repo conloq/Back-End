@@ -3,6 +3,7 @@ import "dotenv/config";
 import { authDB, createDataBase } from "./config/data-base.js";
 import RouterUser from "./routes/userRoutes.js";
 import RouterRecipe from "./routes/recipeRoutes.js";
+import RouterTemperature from "./routes/temperatureRoutes.js";
 import RouterSwagger from "./routes/swaggerRoutes.js";
 import Connection from "./config/sequelize-config.js";
 import "./config/associations.js";
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(RouterUser);
 app.use(RouterRecipe);
 app.use(RouterSwagger);
+app.use(RouterTemperature)
 
 authDB();
 createDataBase();
