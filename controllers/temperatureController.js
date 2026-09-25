@@ -49,4 +49,8 @@ const createTemperature = async (req, res) => {
     }
 }
 
+const showTemperature =async (req, res) => {
+    
+}
+
 export {createTemperature};

@@ -1,29 +1,44 @@
-import { Sequelize } from "sequelize";
+import { DataTypes } from "sequelize";
 import Connection from "../config/sequelize-config.js";
 
-const User = Connection.define('user',{
+const User = Connection.define('Users',{
+    id: {
+        type: DataTypes.INTEGER, 
+        primaryKey: true, 
+        autoIncrement: true
+    },
     name: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     email: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true
     },
     fone: {
-       type: Sequelize.STRING,
+       type: DataTypes.STRING,
         allowNull: true,
     },
     password:{
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     url_image: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: true, 
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false
     }
+},{
+    tableName: 'Users',
+    timestamps: true
 });
-User.sync({force:false});
 
 export default User;

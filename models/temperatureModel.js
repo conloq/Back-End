@@ -1,50 +1,59 @@
-import { INTEGER, Sequelize } from "sequelize";
+import { DataTypes } from "sequelize";
 import Connection from "../config/sequelize-config.js";
 
-const Temperature = Connection.define("Temperature", {
+const Temperature = Connection.define("Temperatures", {
     max_temperature_ramp: {
-        type: INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     min_temperature_ramp: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     max_temperature_limit: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     min_temperature_limit: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     timer: {
-        type: Sequelize.DataTypes.TIME,
+        type: DataTypes.TIME,
         allowNull: false,
     },
     initialization: {
-        type: Sequelize.DataTypes.TIME,
+        type: DataTypes.TIME,
         allowNull: false,
     },
     ideal_time: {
-        type: Sequelize.DataTypes.TIME,
+        type: DataTypes.TIME,
         allowNull: false,
     },
-    active_temperature: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false, 
-        defaultValue: false,
+    order_ramp: {
+        type: DataTypes.INTEGER,
+        allowNull: true
     },
     recipe_id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
             model: "receitas",
             key: "id",
         },
         onDelete: 'CASCADE'
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false
     }
+},{
+    tableName: "Temperatures",
+    timestamps: true
 });
-Temperature.sync({force:false});
 
 export default Temperature;
