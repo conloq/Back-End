@@ -44,17 +44,17 @@ JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY
 
 Regras de nomes: rotas e identificadores em inglês; coleção no plural (`/recipes`, `/lots`, `/analyses`), recurso único no singular (`/user`), `login` à parte; parâmetro de rota `:id`. Corpo e resposta JSON em camelCase — os nomes físicos das colunas (`user_id`, `nome`) nunca aparecem no contrato; a tradução é feita na borda (DTO).
 
-A especificação completa dos endpoints do depósito do PI (03/11/2026) está no handoff `ESPEC-ENDPOINTS-BACKEND.md` e nas issues de contrato de [`conloq/mash`](https://github.com/conloq/mash/issues/66).
+A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues de contrato de [`conloq/mash`](https://github.com/conloq/mash/issues/66) (roteiro #66 e issues do épico #30).
 
 ## Banco e Sequelize
 
 - Runtime vigente: `Connection.sync()` no startup (`app.js`).
 - A pasta `migrations/` existe (decisão da equipe, #66 de 26/09), mas os arquivos atuais **não estão prontos para uso** (não executar). Schema/migration é trabalho separado, com issue própria.
-- Byte problemático a evitar: `define: { underscored: true }` global **não pode** ser ativado no schema existente (renomearia `createdAt`/`updatedAt` e FKs). Se `models` novos precisarem, usar opção local no model, com migration testada em banco vazio.
+- ⚠️ Evitar: `define: { underscored: true }` global **não pode** ser ativado no schema existente (renomearia `createdAt`/`updatedAt` e FKs). Se `models` novos precisarem, usar opção local no model, com migration testada em banco vazio.
 
 ## Regras de contribuição
 
-- **Nunca commitar direto na `main`** — branch própria + pull request + peer review (ver [#35](https://github.com/conloq/mash/issues/35)). Nota: o repo é privado e o plano free**não permite branch protection**; até o time decidir, a disciplina é manual e revisão é obrigatória.
+- **Nunca commitar direto na `main`** — branch própria + pull request + peer review (ver [#35](https://github.com/conloq/mash/issues/35)). Nota: o repo é privado e o plano free **não permite branch protection**; até o time decidir, a disciplina é manual e revisão é obrigatória.
 - Conventional Commits em pt-BR: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
 - Issues principais: [#30](https://github.com/conloq/mash/issues/30) (épico migração), [#32](https://github.com/conloq/mash/issues/32) (CRUD receitas), [#38](https://github.com/conloq/mash/issues/38) (auth/IDOR), [#41](https://github.com/conloq/mash/issues/41) (testes), [#60](https://github.com/conloq/mash/issues/60) (contrato de análise de iodo).
 
@@ -66,6 +66,6 @@ A especificação completa dos endpoints do depósito do PI (03/11/2026) está n
 ├── middlewares/     # authMiddleware (JWT), multer
 ├── models/          # Sequelize via Connection; colunas snake_case, JSON camelCase (DTO na borda)
 ├── routes/          # routers por entidade
-├── migrations/      # fora de uso até foram revisados (decisão 26/09)
+├── migrations/      # fora de uso até serem revisados (decisão 26/09)
 └── config/          # sequelize, cloudinary, associations, swagger
 ```
