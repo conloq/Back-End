@@ -42,7 +42,7 @@ JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY
 
 **DELETE:** `204` sem corpo — encerrar com `res.sendStatus(204)`
 
-Regras de nomes: rotas e identificadores em inglês; coleção no plural (`/recipes`, `/lots`, `/analyses`), recurso único no singular (`/user`), `login` à parte; parâmetro de rota `:id`. Corpo e resposta JSON em camelCase — os nomes físicos das colunas (`user_id`, `nome`) nunca aparecem no contrato; a tradução é feita na borda (DTO).
+Regras de nomes (decisão de 28/09/2026, #30): rotas, tabelas, colunas e payload em inglês snake_case; coleção no plural (`/recipes`, `/lots`, `/analyses`), recurso único no singular (`/user`), `login` à parte; parâmetro de rota `:id`; chave estrangeira `<entidade>_id` (`user_id`, `recipe_id`). O payload usa o nome da coluna, sem camada de tradução — `res.json(registro)` entrega o registro cru. Colunas em português mudam de nome: `nome` → `name`, `fone` → `phone`; a tabela `receitas` passa a `recipes`. Referência: aula-05 DW3 e aula-08 DW2 (`cliente_id`).
 
 A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues de contrato de [`conloq/mash`](https://github.com/conloq/mash/issues/66) (roteiro #66 e issues do épico #30).
 
@@ -64,7 +64,7 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 ├── controllers/     # finos: validam input, mapeiam erros para status HTTP
 ├── services/        # regras de negócio, exportados como singleton (export default new X())
 ├── middlewares/     # authMiddleware (JWT), multer
-├── models/          # Sequelize via Connection; colunas snake_case, JSON camelCase (DTO na borda)
+├── models/          # Sequelize via Connection; colunas, tabelas e payload em inglês snake_case (mesmo nome, sem camada de tradução)
 ├── routes/          # routers por entidade
 ├── migrations/      # fora de uso até serem revisados (decisão 26/09)
 └── config/          # sequelize, cloudinary, associations, swagger
