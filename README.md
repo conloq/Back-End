@@ -35,8 +35,7 @@ JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY
 **Erro** (string direta em português, sem código interno):
 - `400`: `{ "error": "<regra de validação>" }` — ex.: `{ "error": "Nome é obrigatório" }`
 - `401`: `{ "error": "Token inválido ou expirado" }`
-- `403`: `{ "error": "Acesso negado" }`
-- `404`: `{ "error": "<Recurso> não encontrado" }` — também para leitura de recurso de outro usuário (não revelar existência)
+- `404`: `{ "error": "<Recurso> não encontrado" }` — também para recurso de outro usuário, em leitura, alteração e exclusão (não revelar existência)
 - `409`: `{ "error": "Receita já existe" }`
 - `500`: `{ "error": "Erro interno do servidor" }`
 
@@ -49,6 +48,7 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 ## Banco e Sequelize
 
 - Runtime vigente: `Connection.sync()` no startup (`app.js`).
+- Os timestamps `createdAt` e `updatedAt` ficam como o Sequelize gera; são as únicas chaves do JSON fora do snake_case.
 - A pasta `migrations/` existe (decisão da equipe, #66 de 26/09), mas os arquivos atuais **não estão prontos para uso** (não executar). Schema/migration é trabalho separado, com issue própria.
 - ⚠️ Evitar: `define: { underscored: true }` global **não pode** ser ativado no schema existente (renomearia `createdAt`/`updatedAt` e FKs). Se `models` novos precisarem, usar opção local no model, com migration testada em banco vazio.
 
@@ -56,7 +56,7 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 
 - **Nunca commitar direto na `main`** — branch própria + pull request + peer review (ver [#35](https://github.com/conloq/mash/issues/35)). Nota: o repo é privado e o plano free **não permite branch protection**; até o time decidir, a disciplina é manual e revisão é obrigatória.
 - Conventional Commits em pt-BR: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
-- Issues principais: [#30](https://github.com/conloq/mash/issues/30) (épico migração), [#32](https://github.com/conloq/mash/issues/32) (CRUD receitas), [#38](https://github.com/conloq/mash/issues/38) (auth/IDOR), [#41](https://github.com/conloq/mash/issues/41) (testes), [#60](https://github.com/conloq/mash/issues/60) (contrato de análise de iodo).
+- Issues principais: [#30](https://github.com/conloq/mash/issues/30) (épico migração), [#32](https://github.com/conloq/mash/issues/32) (CRUD receitas), [#38](https://github.com/conloq/mash/issues/38) (auth/IDOR), [#41](https://github.com/conloq/mash/issues/41) (validação manual do contrato HTTP), [#60](https://github.com/conloq/mash/issues/60) (contrato de análise de iodo).
 
 ## Estrutura
 
