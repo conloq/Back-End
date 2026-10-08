@@ -41,16 +41,16 @@ JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY
 
 **DELETE:** `204` sem corpo — encerrar com `res.sendStatus(204)`
 
-Regras de nomes (decisão de 28/09/2026, #30): rotas, tabelas, colunas e payload em inglês snake_case; coleção no plural (`/recipes`, `/lots`, `/analyses`), recurso único no singular (`/user`), `login` à parte; parâmetro de rota `:id`; chave estrangeira `<entidade>_id` (`user_id`, `recipe_id`). O payload usa o nome da coluna, sem camada de tradução — `res.json(registro)` entrega o registro cru. Colunas em português mudam de nome: `nome` → `name`, `fone` → `phone`; a tabela `receitas` passa a `recipes`. Referência: aula-05 DW3 e aula-08 DW2 (`cliente_id`).
+Regras de nomes (decisão de 08/10/2026, #30): JSON em inglês camelCase (`userId`, `recipeId`, `collectedAt`), no corpo da requisição, nos campos de formulário e na resposta; rotas, tabelas e colunas em inglês snake_case; coleção no plural (`/recipes`, `/lots`, `/analyses`), recurso único no singular (`/user`), `login` à parte; parâmetro de rota `:id`; chave estrangeira `<entidade>_id` no banco (`user_id`, `recipe_id`) e `<entidade>Id` no JSON. Os models declaram os atributos em camelCase e a conexão do Sequelize usa `define: { underscored: true }`, que gera as colunas em snake_case sem código de tradução. Colunas em português mudam de nome: `nome` → `name`, `fone` → `phone`; a tabela `receitas` passa a `recipes`. Substitui a regra de 28/09, que punha snake_case também no JSON. Referência: aula-05 DW3 e aula-08 DW2 (`cliente_id`).
 
 A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues de contrato de [`conloq/mash`](https://github.com/conloq/mash/issues/66) (roteiro #66 e issues do épico #30).
 
 ## Banco e Sequelize
 
 - Runtime vigente: `Connection.sync()` no startup (`app.js`).
-- Os timestamps `createdAt` e `updatedAt` ficam como o Sequelize gera; são as únicas chaves do JSON fora do snake_case.
+- Os timestamps saem no JSON como `createdAt` e `updatedAt`; no banco as colunas são `created_at` e `updated_at`.
 - A pasta `migrations/` existe (decisão da equipe, #66 de 26/09), mas os arquivos atuais **não estão prontos para uso** (não executar). Schema/migration é trabalho separado, com issue própria.
-- ⚠️ Evitar: `define: { underscored: true }` global **não pode** ser ativado no schema existente (renomearia `createdAt`/`updatedAt` e FKs). Se `models` novos precisarem, usar opção local no model, com migration testada em banco vazio.
+- `define: { underscored: true }` na conexão (`config/sequelize-config.js`) é o que liga os atributos em camelCase às colunas em snake_case. A opção entra com a #71, que recria as tabelas; não deve ser ligada sobre um banco com dados.
 
 ## Regras de contribuição
 
@@ -64,7 +64,7 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 ├── controllers/     # finos: validam input, mapeiam erros para status HTTP
 ├── services/        # regras de negócio, exportados como singleton (export default new X())
 ├── middlewares/     # authMiddleware (JWT), multer
-├── models/          # Sequelize via Connection; colunas, tabelas e payload em inglês snake_case (mesmo nome, sem camada de tradução)
+├── models/          # Sequelize via Connection; atributos em camelCase, colunas em snake_case (underscored)
 ├── routes/          # routers por entidade
 ├── migrations/      # fora de uso até serem revisados (decisão 26/09)
 └── config/          # sequelize, cloudinary, associations, swagger
