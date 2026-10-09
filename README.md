@@ -54,7 +54,8 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 
 ## Regras de contribuição
 
-- **Nunca commitar direto na `main`** — branch própria + pull request + peer review (ver [#35](https://github.com/conloq/mash/issues/35)). Nota: o repo é privado e o plano free **não permite branch protection**; até o time decidir, a disciplina é manual e revisão é obrigatória.
+- **Nunca commitar direto na `main`** — branch própria + pull request + peer review (ver [#35](https://github.com/conloq/mash/issues/35)). O repositório é público e a `main` é protegida: exige Pull Request com 1 aprovação.
+- Revisão automática: o `.github/CODEOWNERS` pede a revisão do Tech Lead, o CodeRabbit comenta o Pull Request em português (`.coderabbit.yaml`) e o CodeQL analisa o código (Security > Code scanning). Nenhum deles aprova ou bloqueia o merge.
 - Conventional Commits em pt-BR: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
 - Issues principais: [#30](https://github.com/conloq/mash/issues/30) (épico migração), [#32](https://github.com/conloq/mash/issues/32) (CRUD receitas), [#38](https://github.com/conloq/mash/issues/38) (auth/IDOR), [#41](https://github.com/conloq/mash/issues/41) (validação manual do contrato HTTP), [#60](https://github.com/conloq/mash/issues/60) (contrato de análise de iodo).
 
