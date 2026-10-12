@@ -23,8 +23,6 @@ const createUser = async (req, res) => {
 
         res.status(201).json({message:"Usuário criado com sucesso"});
     } catch (error) {
-        console.error(error.message);
-
         if(error.message === 'EMAIL_EXISTS') {
             return res.status(409).json({error:"E-mail já existente"});
         }
@@ -41,7 +39,6 @@ const showUser = async (req, res) => {
         res.status(200).json({user: user});
 
     } catch (error) {
-        console.error(error.message);
         if(error.message === "ID_NOT_EXISTS") return res.status(404).json({error:"ID não existe"});
         res.status(500).json({error:"Erro interno do servidor"});
     }
@@ -52,9 +49,8 @@ const deleteUser = async (req,res) => {
         const id = req.userId;
 
         await userService.deleteUser(id);
-        res.status(204);
+        res.sendStatus(204);
     } catch (error) {
-        console.error(error.message);
         res.status(500).json({error:"Erro interno do servidor"});  
     }
 }
@@ -83,7 +79,6 @@ const updateUser = async (req,res) => {
         await userService.updateUser(id, cleanName, cleanEmail, fone, hashPassword);
         return res.status(200).json({message: "Usuário atualizado com sucesso"});
     } catch (error) {
-        console.error(error);
         res.status(500).json({error:"Erro interno do servidor"});
     }
 }
@@ -112,7 +107,6 @@ const updateImage = async (req, res) => {
         return res.status(200).json({message: "Imagem enviada com sucesso!", url: resultCloudinary.secure_url});
         
     } catch (error) {
-        console.error(error);
         res.status(500).json({error:"Erro interno do servidor"});
     }
 }

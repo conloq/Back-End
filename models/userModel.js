@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import Connection from "../config/sequelize-config.js";
 
-const User = Connection.define('Users',{
+const User = Connection.define('users',{
     id: {
         type: DataTypes.INTEGER, 
         primaryKey: true, 
@@ -28,16 +28,16 @@ const User = Connection.define('Users',{
         type: DataTypes.STRING,
         allowNull: true, 
     },
-    createdAt: {
+    created_At: {
         type: DataTypes.DATE,
         allowNull: false
     },
-    updatedAt: {
+    updated_At: {
         type: DataTypes.DATE,
         allowNull: false
     }
 },{
-    tableName: 'Users',
+    tableName: 'users',
     timestamps: true
 });
 

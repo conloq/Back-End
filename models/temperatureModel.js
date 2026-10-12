@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import Connection from "../config/sequelize-config.js";
 
-const Temperature = Connection.define("Temperatures", {
+const Temperature = Connection.define("temperatures", {
     max_temperature_ramp: {
         type: DataTypes.INTEGER,
         allowNull: false
@@ -38,21 +38,21 @@ const Temperature = Connection.define("Temperatures", {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: "receitas",
+            model: "recipes",
             key: "id",
         },
         onDelete: 'CASCADE'
     },
-    createdAt: {
+    created_At: {
         type: DataTypes.DATE,
         allowNull: false
     },
-    updatedAt: {
+    updated_At: {
         type: DataTypes.DATE,
         allowNull: false
     }
 },{
-    tableName: "Temperatures",
+    tableName: "temperatures",
     timestamps: true
 });
 

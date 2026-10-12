@@ -1,20 +1,31 @@
-import Sequelize from "sequelize";
+import {DataTypes} from "sequelize";
 import Connection from "../config/sequelize-config.js";
 
-const Recipe = Connection.define("receitas", {
-    nome: {
-        type: Sequelize.STRING,
+const Recipe = Connection.define("recipes", {
+    name: {
+        type: DataTypes.STRING,
         allowNull: false,
     },
     user_id:{
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references:{
             model: 'users',
             key: 'id'
         }
+    },
+    created_At: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    updated_At: {
+        type: DataTypes.DATE,
+        allowNull: false
     }
+},{
+    tableName: "recipes",
+    timestamps: true
 });
-Recipe.sync({force:false});
+
 
 export default Recipe;

@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import Recipe from "../models/recipeModel.js";
 
 class RecipeUser{
@@ -16,6 +17,14 @@ class RecipeUser{
 
     async showOneRecipe(recipeId) {
         const recipe = await Recipe.findByPk(recipeId);
+        return recipe;
+    }
+
+    async showRecipeByName(nameRecipe) {
+        const recipe = await Recipe.findOne({where:{
+            name: nameRecipe
+        }})
+        console.log(recipe);
         return recipe;
     }
 

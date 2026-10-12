@@ -1,5 +1,6 @@
 import Temperature from "../models/temperatureModel.js";
 
+
 class TemperatureRecipe {
     async createTemperature(
         max_temperature_ramp, 
@@ -24,8 +25,12 @@ class TemperatureRecipe {
             return temperatue;
     }
 
-    async showTemperature(idTemperature){
+    async showTemperature(recipe_id){
+        const temperatures = await Temperature.findAll({where:{
+            recipe_id: recipe_id
+        }})
 
+        return temperatures;
     }
 }
 

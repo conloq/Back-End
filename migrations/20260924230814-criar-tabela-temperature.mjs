@@ -1,9 +1,9 @@
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
-module.exports = {
+export default{
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('Temperatures', {
+    await queryInterface.createTable('temperatures', {
       id: {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
       max_temperature_ramp: {type: Sequelize.INTEGER,allowNull: false},
       min_temperature_ramp: {type: Sequelize.INTEGER, allowNull: false},
@@ -15,17 +15,17 @@ module.exports = {
       order_ramp: {type: Sequelize.INTEGER,allowNull: true},
       recipe_id: {type: Sequelize.INTEGER, allowNull: false,
         references: {
-            model: "receitas",
+            model: "recipes",
             key: "id",
             },
             onDelete: 'CASCADE'
           },
       createdAt: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')},
-      updatedAt: {type: DataTypes.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')}
+      updatedAt: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')}
     })
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('users');
+    await queryInterface.dropTable('temperatures');
   }
 };
