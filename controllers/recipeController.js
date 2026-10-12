@@ -40,7 +40,7 @@ const createRecipe = async (req, res) => {
         
         if(!nameRecipe) return res.status(400).json({error:"Nome não pode estar vazio"});
         
-        const existsRecipe = await RecipeUser.showRecipeByName(nameRecipe);
+        const existsRecipe = await RecipeUser.showRecipeByName(nameRecipe, userId);
         console.log(existsRecipe)
 
         if(existsRecipe) return res.status(409).json({error: "Receita já existe"});

@@ -20,9 +20,9 @@ class RecipeUser{
         return recipe;
     }
 
-    async showRecipeByName(nameRecipe) {
+    async showRecipeByName(nameRecipe, user_id) {
         const recipe = await Recipe.findOne({where:{
-            name: nameRecipe
+            name: nameRecipe, user_id: user_id
         }})
         return recipe;
     }
