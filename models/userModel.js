@@ -24,15 +24,15 @@ const User = Connection.define('users',{
         type: DataTypes.STRING,
         allowNull: false,
     },
-    url_image: {
+    urlImage: {
         type: DataTypes.STRING,
         allowNull: true, 
     },
-    created_At: {
+    createdAt: {
         type: DataTypes.DATE,
         allowNull: false
     },
-    updated_At: {
+    updatedAt: {
         type: DataTypes.DATE,
         allowNull: false
     }

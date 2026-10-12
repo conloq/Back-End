@@ -2,11 +2,16 @@ import {DataTypes} from "sequelize";
 import Connection from "../config/sequelize-config.js";
 
 const Recipe = Connection.define("recipes", {
+    id: {
+        type: DataTypes.INTEGER, 
+        primaryKey: true, 
+        autoIncrement: true
+    },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    user_id:{
+    userId:{
         type: DataTypes.INTEGER,
         allowNull: false,
         references:{
@@ -14,11 +19,11 @@ const Recipe = Connection.define("recipes", {
             key: 'id'
         }
     },
-    created_At: {
+    createdAt: {
         type: DataTypes.DATE,
         allowNull: false
     },
-    updated_At: {
+    updatedAt: {
         type: DataTypes.DATE,
         allowNull: false
     }

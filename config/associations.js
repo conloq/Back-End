@@ -3,17 +3,17 @@ import User from "../models/userModel.js";
 import Temperature from "../models/temperatureModel.js";
 
 User.hasMany(Recipe, {
-    foreignKey: "user_id"
+    foreignKey: "userId"
 });
 
 Recipe.belongsTo(User, {
-    foreignKey: "user_id"
+    foreignKey: "userId"
 });
 
 Recipe.hasMany(Temperature, {
-    foreignKey: "recipe_id"
+    foreignKey: "recipeId"
 });
 
 Temperature.belongsTo(Recipe, {
-    foreignKey: "recipe_id"
+    foreignKey: "recipeId"
 });
