@@ -4,7 +4,7 @@ import Recipe from "../models/recipeModel.js";
 class RecipeUser{
     
     async createRecipe(nameRecipe, idUser) {
-        const recipe = await Recipe.create({nome: nameRecipe, user_id: idUser});
+        const recipe = await Recipe.create({name: nameRecipe, user_id: idUser});
         return recipe;
     }
 
@@ -24,7 +24,6 @@ class RecipeUser{
         const recipe = await Recipe.findOne({where:{
             name: nameRecipe
         }})
-        console.log(recipe);
         return recipe;
     }
 
@@ -37,7 +36,7 @@ class RecipeUser{
     }
 
     async updateUser(recipeId, nameRecipe) {
-        const update = await Recipe.update({nome: nameRecipe}, {where: {id: recipeId}})
+        const update = await Recipe.update({name: nameRecipe}, {where: {id: recipeId}})
     }
 }
 

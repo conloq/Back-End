@@ -7,6 +7,7 @@ const showRecipe = async (req, res) => {
         const recipe = await RecipeUser.showRecipes(userId);
         return res.status(200).json({recipe});
     } catch (error) {
+        console.log(error)
         res.status(500).json({error:"Erro interno do servidor"});
     }
 }
@@ -40,13 +41,15 @@ const createRecipe = async (req, res) => {
         if(!nameRecipe) return res.status(400).json({error:"Nome não pode estar vazio"});
         
         const existsRecipe = await RecipeUser.showRecipeByName(nameRecipe);
+        console.log(existsRecipe)
 
-        if(!existsRecipe) return res.status(409).json({error: "Receita já existe"});
+        if(existsRecipe) return res.status(409).json({error: "Receita já existe"});
         
         const recipe = await RecipeUser.createRecipe(nameRecipe, userId);
 
         res.status(201).json({message:"Receita criada com sucesso", recipe});
     } catch (error) {
+        console.log(error)
         res.status(500).json({error:"Erro interno do servidor"});
     }
 }

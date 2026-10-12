@@ -26,7 +26,7 @@ const createUser = async (req, res) => {
         if(error.message === 'EMAIL_EXISTS') {
             return res.status(409).json({error:"E-mail já existente"});
         }
-
+        console.log(error)
         res.status(500).json({error:"Erro interno do servidor"});
     }
 }

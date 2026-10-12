@@ -10,8 +10,8 @@ export default{
       fone: {type: Sequelize.STRING, allowNull: true},
       password: {type: Sequelize.STRING, allowNull: false},
       url_image: {type: Sequelize.STRING, allowNull: true},
-      created_At: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')},
-      updated_At: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')}
+      createdAt: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')},
+      updatedAt: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')}
     })
   },
 

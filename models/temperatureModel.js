@@ -2,19 +2,19 @@ import { DataTypes } from "sequelize";
 import Connection from "../config/sequelize-config.js";
 
 const Temperature = Connection.define("temperatures", {
-    maxTemperatureRamp: {
+    max_temperature_ramp: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    minTemperatureRamp: {
+    min_temperature_ramp: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    maxTemperatureLimit: {
+    max_temperature_limit: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    minTemperatureLimit: {
+    min_temperature_limit: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
@@ -26,15 +26,15 @@ const Temperature = Connection.define("temperatures", {
         type: DataTypes.TIME,
         allowNull: false,
     },
-    idealTime: {
+    ideal_time: {
         type: DataTypes.TIME,
         allowNull: false,
     },
-    orderRamp: {
+    order_ramp: {
         type: DataTypes.INTEGER,
         allowNull: true
     },
-    recipeId: {
+    recipe_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {

@@ -21,8 +21,8 @@ export default{
             onUpdate: 'CASCADE',
             onDelete: 'CASCADE'
           },
-      created_At: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')},
-      updated_At: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')}
+      createdAt: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')},
+      updatedAt: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')}
     })
   },
 

@@ -24,7 +24,7 @@ const User = Connection.define('users',{
         type: DataTypes.STRING,
         allowNull: false,
     },
-    urlImage: {
+    url_image: {
         type: DataTypes.STRING,
         allowNull: true, 
     },
