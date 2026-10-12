@@ -8,6 +8,8 @@ class AuthService {
             where :{email : email}
         });
 
+        console.log(user);
+
         if(!user) throw new Error("INVALID_CREDENTIAL");
 
         const isValidPassword = await argon2.verify(user.password, password);
@@ -22,7 +24,7 @@ class AuthService {
             {expiresIn: '1d'}
         );
 
-        return {token, user: {id: user.id, name: user.name, email: user.email}};
+        return {token, user: {id: user.id, name: user.name, email: user.email, image: user.url_image}};
     }
 }
 
