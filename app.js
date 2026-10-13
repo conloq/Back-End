@@ -11,7 +11,6 @@ import "./config/associations.js";
 authDB();
 
 const app = express();
-app.use(express.json());
 
 // CORS: libera o frontend (porta 4000) a chamar a API direto do navegador
 const frontendUrl = process.env.FRONTEND_URL ?? "http://localhost:4000";
@@ -24,6 +23,8 @@ app.use((req, res, next) => {
     if (req.method === "OPTIONS") return res.sendStatus(204);
     next();
 });
+
+app.use(express.json());
 
 app.use(RouterUser);
 app.use(RouterRecipe);
