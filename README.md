@@ -1,6 +1,6 @@
-# Back-End — Mash API REST
+# Back-End: Mash API REST
 
-API REST do Mash (migração do app monolítico [`conloq/mash`](https://github.com/conloq/mash)) — Express 5 + Sequelize + MySQL.
+API REST do Mash (migração do app monolítico [`conloq/mash`](https://github.com/conloq/mash)): Express 5 + Sequelize + MySQL.
 
 ## Stack
 
@@ -21,7 +21,7 @@ npm start            # porta 8080
 
 A API usa a porta 8080; o frontend usa a 4000.
 
-## Variáveis de ambiente (`.env` — NUNCA commitar valores reais)
+## Variáveis de ambiente (`.env`: NUNCA commitar valores reais)
 
 ```
 DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE,
@@ -31,24 +31,24 @@ FRONTEND_URL
 
 O `.env.example` com esses nomes entra pela [#39](https://github.com/conloq/mash/issues/39).
 
-## Padrão de resposta (decisão da equipe — base: aula-05 DW3)
+## Padrão de resposta (decisão da equipe: base: aula-05 DW3)
 
 **Sucesso:**
-- Operação sem entidade: `{ "message": "<texto>" }` — ex.: `{ "message": "Receita criada com sucesso" }`
+- Operação sem entidade: `{ "message": "<texto>" }`, ex.: `{ "message": "Receita criada com sucesso" }`
 - Operação que devolve entidade: `{ "message": "<texto>", "<singular>": { ... } }`
-- Detalhe: `{ "<singular>": { ... } }` — ex.: `{ "recipe": { ... } }`
-- Listagem: `{ "<plural>": [ ... ] }` — ex.: `{ "recipes": [...] }`
+- Detalhe: `{ "<singular>": { ... } }`, ex.: `{ "recipe": { ... } }`
+- Listagem: `{ "<plural>": [ ... ] }`, ex.: `{ "recipes": [...] }`
 - **Não usar wrapper genérico `data`.**
 
 **Erro** (string direta em português, sem código interno):
-- `400`: `{ "error": "<regra de validação>" }` — ex.: `{ "error": "Nome é obrigatório" }`
+- `400`: `{ "error": "<regra de validação>" }`, ex.: `{ "error": "Nome é obrigatório" }`
 - `401`: `{ "error": "Token inválido ou expirado" }`
-- `404`: `{ "error": "<Recurso> não encontrado" }` — também para recurso de outro usuário, em leitura, alteração e exclusão (não revelar existência)
+- `404`: `{ "error": "<Recurso> não encontrado" }`: também para recurso de outro usuário, em leitura, alteração e exclusão (não revelar existência)
 - `409`: `{ "error": "Receita já existe" }`
 - `413`: imagem acima de 10 MB; `415`: arquivo que não é JPEG nem PNG
 - `500`: `{ "error": "Erro interno do servidor" }`
 
-**DELETE:** `204` sem corpo — encerrar com `res.sendStatus(204)`
+**DELETE:** `204` sem corpo: encerrar com `res.sendStatus(204)`
 
 ## Nomes (decisão de 08/10/2026, reafirmada em 15/10/2026, #30)
 
@@ -77,7 +77,7 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 
 ## Regras de contribuição
 
-- **Nunca commitar direto na `main`** — branch própria + pull request + peer review (ver [#35](https://github.com/conloq/mash/issues/35)). O repositório é público e a `main` é protegida: exige Pull Request com 1 aprovação.
+- **Nunca commitar direto na `main`**: branch própria + pull request + peer review (ver [#35](https://github.com/conloq/mash/issues/35)). O repositório é público e a `main` é protegida: exige Pull Request com 1 aprovação.
 - Revisão automática: o `.github/CODEOWNERS` pede a revisão do Tech Lead, o CodeRabbit comenta o Pull Request em português (`.coderabbit.yaml`) e o CodeQL analisa o código (Security > Code scanning). Nenhum deles aprova ou bloqueia o merge.
 - Conventional Commits em pt-BR: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`. Branch `<tipo>/<número da issue>-<descrição-curta>`; o Pull Request fecha a issue com `Closes conloq/mash#NN`.
 - Cada rota entregue é documentada em `config/swagger.json` no mesmo Pull Request e tem a validação manual registrada na [#41](https://github.com/conloq/mash/issues/41).
