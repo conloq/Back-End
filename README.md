@@ -50,14 +50,15 @@ O `.env.example` com esses nomes entra pela [#39](https://github.com/conloq/mash
 
 **DELETE:** `204` sem corpo — encerrar com `res.sendStatus(204)`
 
-## Nomes (decisão de 13/10/2026, #30)
+## Nomes (decisão de 08/10/2026, reafirmada em 15/10/2026, #30)
 
-- JSON e banco usam o **mesmo** camelCase em inglês: `userId`, `recipeId`, `urlImage`, `mashStart`, `collectedAt`, `createdAt`, `updatedAt`. Vale no corpo da requisição, nos campos de formulário, na resposta e nas colunas.
-- Os models declaram os atributos em camelCase e a conexão do Sequelize **não usa `underscored`**; ninguém escreve código de tradução.
+- O **JSON** usa camelCase em inglês: `userId`, `recipeId`, `urlImage`, `mashStart`, `collectedAt`, `createdAt`. Vale no corpo da requisição, nos campos de formulário e na resposta.
+- O **banco** usa snake_case em inglês, nas tabelas e colunas: `user_id`, `recipe_id`, `url_image`, `mash_start`, `collected_at`, `created_at`, `updated_at`.
+- Os models declaram os atributos em camelCase e a conexão do Sequelize usa `define: { underscored: true }`, que gera as colunas em snake_case; ninguém escreve código de tradução. Hoje o `underscored` está na raiz do `new Sequelize({...})`, onde não tem efeito; a [#71](https://github.com/conloq/mash/issues/71) o move para `define`.
 - Tabelas em inglês, no plural: `users`, `recipes`, `temperatures`, `lots`, `analyses`.
 - Rotas em inglês: coleção no plural (`/recipes`, `/lots`, `/analyses`), recurso único no singular (`/user`), `login` à parte; parâmetro de rota `:id`.
 - Colunas em português mudam de nome: `nome` → `name`, `fone` → `phone`.
-- Substitui a regra de 08/10 (banco em snake_case com `underscored: true`) e a de 28/09 (snake_case também no JSON).
+- A regra de 13/10 (banco em camelCase) foi revertida em 15/10; a de 28/09 (snake_case também no JSON) continua substituída.
 
 A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues de [`conloq/mash`](https://github.com/conloq/mash/issues/66): 14 rotas em 6 grupos, uma issue por grupo de rotas.
 
@@ -88,7 +89,7 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 ├── controllers/     # finos: validam input, mapeiam erros para status HTTP
 ├── services/        # regras de negócio, exportados como singleton (export default new X())
 ├── middlewares/     # authMiddleware (JWT), multer
-├── models/          # Sequelize via Connection; atributos e colunas em camelCase
+├── models/          # Sequelize via Connection; atributos em camelCase, colunas em snake_case (underscored)
 ├── routes/          # routers por entidade
 ├── migrations/      # fonte do schema; aplicar com npm run db:migrate
 └── config/          # sequelize, cloudinary, associations, swagger
