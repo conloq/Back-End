@@ -7,21 +7,29 @@ API REST do Mash (migração do app monolítico [`conloq/mash`](https://github.c
 - Node.js (ESM), Express 5, Sequelize, MySQL (database `mash`)
 - JWT Bearer + Argon2id (memoryCost 2^16, timeCost 3, parallelism 1)
 - Multer (memoryStorage) → Cloudinary
+- CORS liberado para o frontend (`FRONTEND_URL`, padrão `http://localhost:4000`): o navegador chama a API direto, com o token no `Authorization: Bearer`
 - Swagger: `GET /api-docs`
 
 ## Como rodar
 
 ```bash
 npm install
-npm start        # porta 8080
+# o banco precisa existir antes: CREATE DATABASE mash;
+npm run db:migrate   # aplica as migrations pendentes
+npm start            # porta 8080
 ```
+
+A API usa a porta 8080; o frontend usa a 4000.
 
 ## Variáveis de ambiente (`.env` — NUNCA commitar valores reais)
 
 ```
 DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE,
-JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY
+JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY,
+FRONTEND_URL
 ```
+
+O `.env.example` com esses nomes entra pela [#39](https://github.com/conloq/mash/issues/39).
 
 ## Padrão de resposta (decisão da equipe — base: aula-05 DW3)
 
@@ -37,27 +45,42 @@ JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY
 - `401`: `{ "error": "Token inválido ou expirado" }`
 - `404`: `{ "error": "<Recurso> não encontrado" }` — também para recurso de outro usuário, em leitura, alteração e exclusão (não revelar existência)
 - `409`: `{ "error": "Receita já existe" }`
+- `413`: imagem acima de 10 MB; `415`: arquivo que não é JPEG nem PNG
 - `500`: `{ "error": "Erro interno do servidor" }`
 
 **DELETE:** `204` sem corpo — encerrar com `res.sendStatus(204)`
 
-Regras de nomes (decisão de 08/10/2026, #30): JSON em inglês camelCase (`userId`, `recipeId`, `collectedAt`), no corpo da requisição, nos campos de formulário e na resposta; rotas, tabelas e colunas em inglês snake_case; coleção no plural (`/recipes`, `/lots`, `/analyses`), recurso único no singular (`/user`), `login` à parte; parâmetro de rota `:id`; chave estrangeira `<entidade>_id` no banco (`user_id`, `recipe_id`) e `<entidade>Id` no JSON. Os models declaram os atributos em camelCase e a conexão do Sequelize usa `define: { underscored: true }`, que gera as colunas em snake_case sem código de tradução. Colunas em português mudam de nome: `nome` → `name`, `fone` → `phone`; a tabela `receitas` passa a `recipes`. Substitui a regra de 28/09, que punha snake_case também no JSON. Referência: aula-05 DW3 e aula-08 DW2 (`cliente_id`).
+## Nomes (decisão de 13/10/2026, #30)
 
-A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues de contrato de [`conloq/mash`](https://github.com/conloq/mash/issues/66) (roteiro #66 e issues do épico #30).
+- JSON e banco usam o **mesmo** camelCase em inglês: `userId`, `recipeId`, `urlImage`, `mashStart`, `collectedAt`, `createdAt`, `updatedAt`. Vale no corpo da requisição, nos campos de formulário, na resposta e nas colunas.
+- Os models declaram os atributos em camelCase e a conexão do Sequelize **não usa `underscored`**; ninguém escreve código de tradução.
+- Tabelas em inglês, no plural: `users`, `recipes`, `temperatures`, `lots`, `analyses`.
+- Rotas em inglês: coleção no plural (`/recipes`, `/lots`, `/analyses`), recurso único no singular (`/user`), `login` à parte; parâmetro de rota `:id`.
+- Colunas em português mudam de nome: `nome` → `name`, `fone` → `phone`.
+- Substitui a regra de 08/10 (banco em snake_case com `underscored: true`) e a de 28/09 (snake_case também no JSON).
 
-## Banco e Sequelize
+A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues de [`conloq/mash`](https://github.com/conloq/mash/issues/66): 14 rotas em 6 grupos, uma issue por grupo de rotas.
 
-- Runtime vigente: `Connection.sync()` no startup (`app.js`).
-- Os timestamps saem no JSON como `createdAt` e `updatedAt`; no banco as colunas são `created_at` e `updated_at`.
-- A pasta `migrations/` existe (decisão da equipe, #66 de 26/09), mas os arquivos atuais **não estão prontos para uso** (não executar). Schema/migration é trabalho separado, com issue própria.
-- `define: { underscored: true }` na conexão (`config/sequelize-config.js`) é o que liga os atributos em camelCase às colunas em snake_case. A opção entra com a #71, que recria as tabelas; não deve ser ligada sobre um banco com dados.
+## Banco e migrations (decisão de 12/10/2026)
+
+- O schema vem das **migrations do Sequelize**: toda tabela ou coluna nova entra por um arquivo em `migrations/`, aplicado com `npm run db:migrate` antes de `npm start` e a cada deploy.
+- A [#71](https://github.com/conloq/mash/issues/71) tira o `await Connection.sync()` do `app.js` e liga o `prestart`. Até ela sair, o `sync()` ainda roda no startup; rode `npm run db:migrate` antes, para a migration criar as tabelas, e não o `sync()`.
+- Migration já aplicada no banco publicado não se edita: cria-se uma nova.
+- Comandos: `npx sequelize-cli db:migrate:status` mostra o que já rodou; `npm run db:migrate:undo` desfaz a última (nunca no banco publicado).
+
+## Deploy (decisão de 13/10/2026, [#61](https://github.com/conloq/mash/issues/61))
+
+- API no Render (plano gratuito) e MySQL gratuito externo (Aiven), porque o Render gratuito não oferece MySQL. Imagens no Cloudinary.
+- O plano gratuito dorme após 15 min sem tráfego: aquecer a API antes da demonstração. A [#68](https://github.com/conloq/mash/issues/68) cria o `GET /health` para o Render saber se a API subiu.
+- Definir `FRONTEND_URL` com a URL do frontend publicado ([#69](https://github.com/conloq/mash/issues/69)).
 
 ## Regras de contribuição
 
 - **Nunca commitar direto na `main`** — branch própria + pull request + peer review (ver [#35](https://github.com/conloq/mash/issues/35)). O repositório é público e a `main` é protegida: exige Pull Request com 1 aprovação.
 - Revisão automática: o `.github/CODEOWNERS` pede a revisão do Tech Lead, o CodeRabbit comenta o Pull Request em português (`.coderabbit.yaml`) e o CodeQL analisa o código (Security > Code scanning). Nenhum deles aprova ou bloqueia o merge.
-- Conventional Commits em pt-BR: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
-- Issues principais: [#30](https://github.com/conloq/mash/issues/30) (épico migração), [#32](https://github.com/conloq/mash/issues/32) (CRUD receitas), [#38](https://github.com/conloq/mash/issues/38) (auth/IDOR), [#41](https://github.com/conloq/mash/issues/41) (validação manual do contrato HTTP), [#60](https://github.com/conloq/mash/issues/60) (contrato de análise de iodo).
+- Conventional Commits em pt-BR: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`. Branch `<tipo>/<número da issue>-<descrição-curta>`; o Pull Request fecha a issue com `Closes conloq/mash#NN`.
+- Cada rota entregue é documentada em `config/swagger.json` no mesmo Pull Request e tem a validação manual registrada na [#41](https://github.com/conloq/mash/issues/41).
+- Épicos do depósito em `conloq/mash`: [#30](https://github.com/conloq/mash/issues/30) (base da API: padrões, schema e evidências), [#83](https://github.com/conloq/mash/issues/83) (conta e segurança), [#80](https://github.com/conloq/mash/issues/80) (receitas e rampas), [#81](https://github.com/conloq/mash/issues/81) (lotes) e [#82](https://github.com/conloq/mash/issues/82) (teste de iodo: envio, consulta e histórico). A análise por visão computacional (OpenCV, [#34](https://github.com/conloq/mash/issues/34)) fica para o próximo semestre.
 
 ## Estrutura
 
@@ -65,8 +88,8 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 ├── controllers/     # finos: validam input, mapeiam erros para status HTTP
 ├── services/        # regras de negócio, exportados como singleton (export default new X())
 ├── middlewares/     # authMiddleware (JWT), multer
-├── models/          # Sequelize via Connection; atributos em camelCase, colunas em snake_case (underscored)
+├── models/          # Sequelize via Connection; atributos e colunas em camelCase
 ├── routes/          # routers por entidade
-├── migrations/      # fora de uso até serem revisados (decisão 26/09)
+├── migrations/      # fonte do schema; aplicar com npm run db:migrate
 └── config/          # sequelize, cloudinary, associations, swagger
 ```
