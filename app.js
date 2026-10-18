@@ -1,11 +1,18 @@
 import express from "express";
 import "dotenv/config";
+
+const obrigatorias = ["DB_HOST", "DB_USERNAME", "DB_DATABASE", "JWT_SECRET_KEY", "CLOUD_NAME", "API_KEY_CLOUDINARY", "API_SECRET_KEY_CLOUDINARY"];
+const ausentes = obrigatorias.filter((nome) => !process.env[nome]);
+if (ausentes.length) {
+    console.error(`Variáveis de ambiente ausentes: ${ausentes.join(", ")}`);
+    process.exit(1);
+}
+
 import { authDB } from "./config/data-base.js";
 import RouterUser from "./routes/userRoutes.js";
 import RouterRecipe from "./routes/recipeRoutes.js";
 import RouterTemperature from "./routes/temperatureRoutes.js";
 import RouterSwagger from "./routes/swaggerRoutes.js";
-import Connection from "./config/sequelize-config.js";
 import "./config/associations.js";
 
 authDB();
@@ -30,8 +37,6 @@ app.use(RouterUser);
 app.use(RouterRecipe);
 app.use(RouterSwagger);
 app.use(RouterTemperature);
-
-await Connection.sync();
 
 const port = 8080;
 app.listen(port,(e) => {

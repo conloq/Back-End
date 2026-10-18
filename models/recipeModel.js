@@ -32,5 +32,4 @@ const Recipe = Connection.define("recipes", {
     timestamps: true
 });
 
-
 export default Recipe;
