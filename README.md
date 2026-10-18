@@ -64,10 +64,18 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 
 ## Banco e migrations (decisão de 12/10/2026)
 
-- O schema vem das **migrations do Sequelize**: toda tabela ou coluna nova entra por um arquivo em `migrations/`, aplicado com `npm run db:migrate` antes de `npm start` e a cada deploy.
-- A [#71](https://github.com/conloq/mash/issues/71) tira o `await Connection.sync()` do `app.js` e liga o `prestart`. Até ela sair, o `sync()` ainda roda no startup; rode `npm run db:migrate` antes, para a migration criar as tabelas, e não o `sync()`.
-- Migration já aplicada no banco publicado não se edita: cria-se uma nova.
-- Comandos: `npx sequelize-cli db:migrate:status` mostra o que já rodou; `npm run db:migrate:undo` desfaz a última (nunca no banco publicado).
+### Como rodar as migrations
+
+| Comando | O que faz |
+|---|---|
+| `CREATE DATABASE mash;` | Cria o banco vazio, uma vez; a API não o cria mais |
+| `npm run db:migrate` | Aplica as migrations pendentes, em ordem de nome de arquivo |
+| `npm start` | Com o `prestart`, aplica as migrations pendentes e depois sobe a API |
+| `npx sequelize-cli db:migrate:status` | Mostra quais já rodaram (`up`) e quais faltam (`down`) |
+| `npm run db:migrate:undo` | Desfaz a última migration aplicada |
+| `npm run db:migrate:undo:all` | Desfaz todas; nunca no banco publicado |
+| `npx sequelize-cli migration:generate --name <nome>` | Cria um arquivo novo em `migrations/` |
+
 
 ## Deploy (decisão de 13/10/2026, [#61](https://github.com/conloq/mash/issues/61))
 
