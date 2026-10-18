@@ -11,8 +11,6 @@ const createUser = async (req, res) => {
 
         if(!cleanName || !cleanEmail) return res.status(400).json({error:"Nome ou E-mail não podem estar vazios"});
 
-        if(!cleanEmail.endsWith("@gmail.com")) return res.status(400).json({error:"Apenas contas E-mail são permitidas"});
-
         if(!password) return res.status(400).json({error: "A senha não pode ser vazia"});
 
         if(/\s/.test(password)) return res.status(400).json({ error: "A senha não pode conter espaços"});
@@ -88,7 +86,7 @@ const updateImage = async (req, res) => {
         const id = req.userId;
         const imageUser = req.file;
 
-        if(!imageUser) return res.status(400).json({message:"Imagem não foi enviada"});
+        if(!imageUser) return res.status(400).json({error:"Imagem não foi enviada"});
 
         const resultCloudinary = await new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(

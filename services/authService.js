@@ -8,8 +8,6 @@ class AuthService {
             where :{email : email}
         });
 
-        console.log(user);
-
         if(!user) throw new Error("INVALID_CREDENTIAL");
 
         const isValidPassword = await argon2.verify(user.password, password);

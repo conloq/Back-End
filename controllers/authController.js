@@ -5,16 +5,16 @@ const login = async (req, res) => {
         const {email, password} = req.body;
 
         if(!email || !password) {
-            return res.status(400).json({message: "E-mail e senha não podem estar vazios"});
+            return res.status(400).json({error: "E-mail e senha não podem estar vazios"});
         }
 
         const data = await AuthService.login(email, password);
         return res.status(200).json(data);
     } catch (error) {
         if(error.message === "INVALID_CREDENTIAL") {
-            return res.status(401).json({error: "E-mail ou senha invalidos"});
+            return res.status(401).json({error: "E-mail ou senha inválidos"});
         }
-        res.status(500).json({error: "Erro interno no servidor"});
+        res.status(500).json({error: "Erro interno do servidor"});
     }
 }
 
