@@ -27,7 +27,13 @@ class UserService{
         });
     }
 
-    async updateUser(id, name, email, fone, password) {
+    async updateUser(id, name, email, phone, password) {
+        const emailexists = await User.findOne({
+            where: {email}
+        });
+
+        if(emailexists) throw new Error("EMAIL_EXISTS");
+
         if(!password) {
             const update = await User.update({name, email, phone}, {where:{id}});
             return update;

@@ -66,7 +66,6 @@ const updateUser = async (req,res) => {
         if(password){   
             if(/\s/.test(password)) return res.status(400).json({ error: "A senha não pode conter espaços"});
         }
-
         
         if(!password){
             await userService.updateUser(id, cleanName, cleanEmail, fone);
@@ -78,15 +77,18 @@ const updateUser = async (req,res) => {
         return res.status(200).json({message: "Usuário atualizado com sucesso"});
     } catch (error) {
         res.status(500).json({error:"Erro interno do servidor"});
+            if(error.message === 'EMAIL_EXISTS') {
+            return res.status(409).json({error:"E-mail já existente"});
+        }
     }
 }
 
 const updateImage = async (req, res) => {
     try {
         const id = req.userId;
-        const imageUser = req.file;
+        const image = req.file;
 
-        if(!imageUser) return res.status(400).json({error:"Imagem não foi enviada"});
+        if(!image) return res.status(400).json({error:"Imagem não foi enviada"});
 
         const resultCloudinary = await new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(
@@ -98,7 +100,7 @@ const updateImage = async (req, res) => {
                     resolve(result)
                 }
             );
-            stream.end(imageUser.buffer);
+            stream.end(image.buffer);
         });
 
         await userService.updateImage(id, resultCloudinary.secure_url);
