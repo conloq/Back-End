@@ -11,7 +11,7 @@ const Recipe = Connection.define("recipes", {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    user_id:{
+    userId:{
         type: DataTypes.INTEGER,
         allowNull: false,
         references:{

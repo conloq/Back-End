@@ -16,7 +16,7 @@ const User = Connection.define('users',{
         allowNull: false,
         unique: true
     },
-    fone: {
+    phone: {
        type: DataTypes.STRING,
         allowNull: true,
     },
@@ -24,7 +24,7 @@ const User = Connection.define('users',{
         type: DataTypes.STRING,
         allowNull: false,
     },
-    url_image: {
+    urlImage: {
         type: DataTypes.STRING,
         allowNull: true, 
     },

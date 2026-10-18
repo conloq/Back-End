@@ -7,9 +7,9 @@ export default{
       id: {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
       name: {type: Sequelize.STRING, allowNull: false},
       email: {type: Sequelize.STRING, allowNull: false, unique: true},
-      fone: {type: Sequelize.STRING, allowNull: true},
+      phone: {type: Sequelize.STRING, allowNull: true},
       password: {type: Sequelize.STRING, allowNull: false},
-      url_image: {type: Sequelize.STRING, allowNull: true},
+      urlImage: {type: Sequelize.STRING, allowNull: true},
       createdAt: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')},
       updatedAt: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')}
     })

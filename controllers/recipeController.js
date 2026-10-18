@@ -25,7 +25,7 @@ const showOneRecipe = async (req, res) => {
 
         console.log(recipe);
 
-        if(recipe.user_id != userId) return res.status(404).json({error:"Ação não permitida"});
+        if(recipe.userId != userId) return res.status(404).json({error:"Ação não permitida"});
 
         return res.status(200).json({recipes: recipe});
     } catch (error) {
@@ -67,7 +67,7 @@ const deleteRecipe = async (req, res) => {
 
         console.log(recipe);
 
-        if(recipe.user_id != userId) return res.status(404).json({error:"Ação não permitida"});
+        if(recipe.userId != userId) return res.status(404).json({error:"Ação não permitida"});
 
         await RecipeUser.deleteRecipe(recipeId);
 
@@ -90,7 +90,7 @@ const updateRecipe = async (req, res) => {
 
         if(!recipe) return res.status(400).json({error:"Receita não encontrada"});
 
-        if(recipe.user_id != userId) return res.status(404).json({error:"Ação não permitida"});
+        if(recipe.userId != userId) return res.status(404).json({error:"Ação não permitida"});
 
         await RecipeUser.updateUser(recipeId, nameRecipe);
         return res.status(200).json({message: "Receita atualizada com sucesso"});

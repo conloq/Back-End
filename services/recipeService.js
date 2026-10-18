@@ -4,13 +4,13 @@ import Recipe from "../models/recipeModel.js";
 class RecipeUser{
     
     async createRecipe(nameRecipe, idUser) {
-        const recipe = await Recipe.create({name: nameRecipe, user_id: idUser});
+        const recipe = await Recipe.create({name: nameRecipe, userId: idUser});
         return recipe;
     }
 
     async showRecipes(idUser) {
         const recipeList = await Recipe.findAll({
-            where: {user_id: idUser}
+            where: {userId: idUser}
         })
         return recipeList;
     }
@@ -22,7 +22,7 @@ class RecipeUser{
 
     async showRecipeByName(nameRecipe, user_id) {
         const recipe = await Recipe.findOne({where:{
-            name: nameRecipe, user_id: user_id
+            name: nameRecipe, userId: user_id
         }})
         return recipe;
     }

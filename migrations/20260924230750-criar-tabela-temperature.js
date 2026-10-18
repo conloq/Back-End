@@ -5,15 +5,15 @@ export default{
   async up (queryInterface, Sequelize) {
     await queryInterface.createTable('temperatures', {
       id: {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
-      max_temperature_ramp: {type: Sequelize.INTEGER,allowNull: false},
-      min_temperature_ramp: {type: Sequelize.INTEGER, allowNull: false},
-      max_temperature_limit: {type: Sequelize.INTEGER,allowNull: false,},
-      min_temperature_limit: {type: Sequelize.INTEGER,allowNull: false},
+      maxTemperatureRamp: {type: Sequelize.INTEGER,allowNull: false},
+      minTemperatureRamp: {type: Sequelize.INTEGER, allowNull: false},
+      maxTemperatureLimit: {type: Sequelize.INTEGER,allowNull: false,},
+      minTemperatureLimit: {type: Sequelize.INTEGER,allowNull: false},
       timer: {type: Sequelize.TIME,allowNull: false},
       initialization: {type: Sequelize.TIME,allowNull: false,},
-      ideal_time: {type: Sequelize.TIME,allowNull: false},
-      order_ramp: {type: Sequelize.INTEGER,allowNull: true},
-      recipe_id: {type: Sequelize.INTEGER, allowNull: false,
+      idealTime: {type: Sequelize.TIME,allowNull: false},
+      orderRamp: {type: Sequelize.INTEGER,allowNull: true},
+      recipeId: {type: Sequelize.INTEGER, allowNull: false,
         references: {
             model: "recipes",
             key: "id",

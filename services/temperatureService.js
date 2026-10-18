@@ -3,31 +3,31 @@ import Temperature from "../models/temperatureModel.js";
 
 class TemperatureRecipe {
     async createTemperature(
-        max_temperature_ramp, 
-        min_temperature_ramp, 
-        max_temperature_limit, 
-        min_temperature_limit, 
+        maxTemperatureRamp, 
+        minTemperatureRamp, 
+        maxTemperatureLimit, 
+        minTemperatureLimit, 
         timer, 
         initialization, 
-        ideal_time, 
-        active_temperature,
-        recipe_id){
+        idealTime, 
+        activeTemperature,
+        recipeId){
             const temperatue = Temperature.create({
-                max_temperature_ramp, 
-                min_temperature_ramp, 
-                max_temperature_limit,
-                min_temperature_limit,
+                maxTemperatureRamp, 
+                minTemperatureRamp, 
+                maxTemperatureLimit,
+                minTemperatureLimit,
                 timer,
                 initialization,
-                ideal_time,
-                active_temperature,
-                recipe_id});
+                idealTime,
+                activeTemperature,
+                recipeId});
             return temperatue;
     }
 
     async showTemperature(recipe_id){
         const temperatures = await Temperature.findAll({where:{
-            recipe_id: recipe_id
+            recipeId: recipe_id
         }})
 
         return temperatures;

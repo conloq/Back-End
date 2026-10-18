@@ -6,7 +6,7 @@ export default{
     await queryInterface.createTable('recipes',{
       id: {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
       name: {type: Sequelize.STRING, allowNull: false,},
-      user_id:{type: Sequelize.INTEGER, allowNull: false,
+      userId:{type: Sequelize.INTEGER, allowNull: false,
         references:{
             model: 'users',
             key: 'id',

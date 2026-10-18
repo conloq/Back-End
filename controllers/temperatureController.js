@@ -4,37 +4,37 @@ import RecipeUser from "../services/recipeService.js";
 const createTemperature = async (req, res) => {
     try {
         const userId = req.userId;
-        const recipe_id = req.params.id;
+        const recipeId = req.params.id;
 
-        if(!recipe_id) return res.status(400).json({error:"ID receita não informado!"});
+        if(!recipeId) return res.status(400).json({error:"ID receita não informado!"});
 
-        const recipe = await RecipeUser.showOneRecipe(recipe_id);
+        const recipe = await RecipeUser.showOneRecipe(recipeId);
 
         if(!recipe) return res.status(400).json({error:"Receita não encontrada"});
 
-        if(userId != recipe.user_id) return res.status(404).json({error:"Ação não permitida"});
+        if(userId != recipe.userId) return res.status(404).json({error:"Ação não permitida"});
 
         const {
-            max_temperature_ramp, 
-            min_temperature_ramp, 
-            max_temperature_limit,
-            min_temperature_limit,
+            maxTemperatureRamp, 
+            minTemperatureRamp, 
+            maxTemperatureLimit,
+            minTemperatureLimit,
             timer,
             initialization,
-            ideal_time,
-            active_temperature,
+            idealTime,
+            activeTemperature,
             } = req.body;
 
         const temperature = await TemperatureRecipe.createTemperature(
-            max_temperature_ramp, 
-            min_temperature_ramp, 
-            max_temperature_limit,
-            min_temperature_limit,
+            maxTemperatureRamp, 
+            minTemperatureRamp, 
+            maxTemperatureLimit,
+            minTemperatureLimit,
             timer,
             initialization,
-            ideal_time,
-            active_temperature,
-            recipe_id);
+            idealTime,
+            activeTemperature,
+            recipeId);
 
         res.status(201).json({message:"Temperatura criado com sucesso", temperature});
 
@@ -46,17 +46,17 @@ const createTemperature = async (req, res) => {
 
 const showTemperature = async (req, res) => {
     const userId = req.userId;
-    const recipe_id = req.params.id;
+    const recipeId = req.params.id;
 
-    if(!recipe_id) return res.status(400).json({error:"ID receita não informado!"});
+    if(!recipeId) return res.status(400).json({error:"ID receita não informado!"});
             
-    const recipe = await RecipeUser.showOneRecipe(recipe_id);
+    const recipe = await RecipeUser.showOneRecipe(recipeId);
 
     if(!recipe) return res.status(400).json({error:"Receita não encontrada"});
 
-    if(userId != recipe.user_id) return res.status(404).json({error:"Ação não permitida"});
+    if(userId != recipe.userId) return res.status(404).json({error:"Ação não permitida"});
 
-    const temperatures = await TemperatureRecipe.showTemperature(recipe_id);
+    const temperatures = await TemperatureRecipe.showTemperature(recipeId);
 
     return res.status(200).json({temperatures: temperatures});
 }

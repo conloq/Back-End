@@ -24,7 +24,7 @@ class AuthService {
             {expiresIn: '1d'}
         );
 
-        return {token, user: {id: user.id, name: user.name, email: user.email, image: user.url_image}};
+        return {token, user: {id: user.id, name: user.name, email: user.email, image: user.urlImage}};
     }
 }
 

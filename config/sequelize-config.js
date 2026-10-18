@@ -7,7 +7,6 @@ const Connection = new Sequelize({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
     timezone: "-03:00",
-    underscored: true
 })
 
 export default Connection;

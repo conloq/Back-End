@@ -29,16 +29,16 @@ class UserService{
 
     async updateUser(id, name, email, fone, password) {
         if(!password) {
-            const update = await User.update({name, email, fone}, {where:{id}});
+            const update = await User.update({name, email, phone}, {where:{id}});
             return update;
         }
 
-        const update = await User.update({name, email, fone, password}, {where:{id}});
+        const update = await User.update({name, email, phone, password}, {where:{id}});
         return update;
     }
 
     async  updateImage(id, url) {
-        const updateImage = await User.update({url_image: url}, {where:{id}});
+        const updateImage = await User.update({urlImage: url}, {where:{id}});
         return updateImage;
     }
 }
