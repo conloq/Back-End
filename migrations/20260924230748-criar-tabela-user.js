@@ -9,9 +9,9 @@ export default{
       email: {type: Sequelize.STRING, allowNull: false, unique: true},
       phone: {type: Sequelize.STRING, allowNull: true},
       password: {type: Sequelize.STRING, allowNull: false},
-      urlImage: {type: Sequelize.STRING, allowNull: true},
-      createdAt: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')},
-      updatedAt: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')}
+      url_image: {type: Sequelize.STRING, allowNull: true},
+      created_at: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')},
+      updated_at: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')}
     })
   },
 

@@ -1,3 +1,4 @@
+// code-wiki: Autentica credenciais com Argon2 e retorna JWT e perfil público camelCase.
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
@@ -22,7 +23,7 @@ class AuthService {
             {expiresIn: '1d'}
         );
 
-        return {token, user: {id: user.id, name: user.name, email: user.email, image: user.urlImage}};
+        return {token, user: {id: user.id, name: user.name, email: user.email, urlImage: user.urlImage}};
     }
 }
 

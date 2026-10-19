@@ -52,3 +52,17 @@ versão. Substituída por indexOf/lastIndexOf e verificação linear de espaços
 entrada adversarial com 20 mil caracteres retorna 400. Aviso de ausência de
 rate limiting no upload permanece pendente; não foi criada política nova
 nessa correção. A aprovação humana e os checks do PR continuam necessários.
+
+## Integração revalidada em 19/10/2026
+
+Main `f5492f8` integrada preservando `phone`, `urlImage`, Swagger do login e
+os três models/associações do João, sem alteração nos arquivos dos models.
+Migrations e models da main passaram em MySQL vazio. A suíte HTTP integrada
+passou em 18 cenários, incluindo limite 429 e isolamento por conta.
+
+O alerta CodeQL de upload sem rate limiting foi tratado com
+express-rate-limit 8.7.1 somente nesta rota: 10 requisições por minuto por
+conta autenticada, contador em memória por processo. Reinício zera o contador;
+mais de uma instância exigirá store compartilhado. Não confia em IP enviado
+por proxy. O contrato documenta 429 no envelope error. Cloudinary real e
+inspeção binária continuam fora da comprovação apresentada.

@@ -29,7 +29,8 @@ JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY,
 FRONTEND_URL
 ```
 
-O `.env.example` com esses nomes entra pela [#39](https://github.com/conloq/mash/issues/39).
+Copie o `.env.example` para `.env` e preencha as variáveis do ambiente.
+Nunca versione o `.env` nem preencha segredos no arquivo de exemplo.
 
 ## Padrão de resposta (decisão da equipe: base: aula-05 DW3)
 
@@ -54,7 +55,7 @@ O `.env.example` com esses nomes entra pela [#39](https://github.com/conloq/mash
 
 - O **JSON** usa camelCase em inglês: `userId`, `recipeId`, `urlImage`, `mashStart`, `collectedAt`, `createdAt`. Vale no corpo da requisição, nos campos de formulário e na resposta.
 - O **banco** usa snake_case em inglês, nas tabelas e colunas: `user_id`, `recipe_id`, `url_image`, `mash_start`, `collected_at`, `created_at`, `updated_at`.
-- Os models declaram os atributos em camelCase e a conexão do Sequelize usa `define: { underscored: true }`, que gera as colunas em snake_case; ninguém escreve código de tradução. Hoje o `underscored` está na raiz do `new Sequelize({...})`, onde não tem efeito; a [#71](https://github.com/conloq/mash/issues/71) o move para `define`.
+- Os models declaram os atributos em camelCase e a conexão do Sequelize usa `define: { underscored: true }`, que mapeia as colunas em snake_case. As migrations declaram esses nomes físicos; não há código de tradução do JSON.
 - Tabelas em inglês, no plural: `users`, `recipes`, `temperatures`, `lots`, `analyses`.
 - Rotas em inglês: coleção no plural (`/recipes`, `/lots`, `/analyses`), recurso único no singular (`/user`), `login` à parte; parâmetro de rota `:id`.
 - Colunas em português mudam de nome: `nome` → `name`, `fone` → `phone`.
@@ -65,9 +66,25 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 ## Banco e migrations (decisão de 12/10/2026)
 
 - O schema vem das **migrations do Sequelize**: toda tabela ou coluna nova entra por um arquivo em `migrations/`, aplicado com `npm run db:migrate` antes de `npm start` e a cada deploy.
-- A [#71](https://github.com/conloq/mash/issues/71) tira o `await Connection.sync()` do `app.js` e liga o `prestart`. Até ela sair, o `sync()` ainda roda no startup; rode `npm run db:migrate` antes, para a migration criar as tabelas, e não o `sync()`.
+- O `prestart` executa `npm run db:migrate` antes de subir a API. O bootstrap não chama `Connection.sync()`; os models não criam nem alteram tabelas.
 - Migration já aplicada no banco publicado não se edita: cria-se uma nova.
 - Comandos: `npx sequelize-cli db:migrate:status` mostra o que já rodou; `npm run db:migrate:undo` desfaz a última (nunca no banco publicado).
+
+### Como rodar as migrations
+
+| Comando | Resultado |
+|---|---|
+| `CREATE DATABASE mash;` | Cria o banco vazio uma vez; a API não cria o banco |
+| `npm run db:migrate` | Aplica as migrations pendentes na ordem dos arquivos |
+| `npm start` | Aplica migrations pelo `prestart` e inicia a API |
+| `npx sequelize-cli db:migrate:status` | Lista migrations aplicadas e pendentes |
+| `npm run db:migrate:undo` | Desfaz a última migration no ambiente local |
+| `npm run db:migrate:undo:all` | Desfaz todas no ambiente local; não usar no banco publicado |
+| `npx sequelize-cli migration:generate --name <nome>` | Cria um arquivo que deve usar `export default` neste projeto ESM |
+
+Os ambientes `development` e `production` usam as variáveis `DB_*`. Banco que já recebeu migrations exige uma nova migration para mudar seu schema; as três iniciais foram reconciliadas antes do primeiro deploy, conforme a #71.
+
+Para conferir o schema em um banco descartável vazio, configure `DB_DATABASE` com o prefixo `mash_71_test_` e execute `node scripts/verify-schema.mjs`. O verificador aplica migrations e testa colunas, FKs, timestamps, cascatas, JSON camelCase e reaplicação sem mudanças; recusa banco não vazio e não apaga schemas. A evidência da #71 está em `docs/evidence/71-schema.md`.
 
 ## Deploy (decisão de 13/10/2026, [#61](https://github.com/conloq/mash/issues/61))
 

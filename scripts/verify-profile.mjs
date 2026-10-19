@@ -25,5 +25,9 @@ for(const [name,type,size,expected] of [["JPEG válido","image/jpeg",100,200],["
  const form=new FormData();form.append("image",new Blob([new Uint8Array(size)],{type}),"test-file");r=await call("PUT","/user/upload",form,token);check(name,()=>{assert.equal(r[0],expected);if(expected===200)assert.equal(r[1].url,"https://example.test/profile.png");else assert.equal(typeof r[1].error,"string");});
 }
 r=await call("GET","/user",undefined,token);check("URL persistida sem hash",()=>{assert.equal(r[1].user.urlImage,"https://example.test/profile.png");assert.ok(!("password" in r[1].user));});
+let throttled=false;
+for(let n=0;n<11;n++){const result=await call("PUT","/user/upload",new FormData(),token);if(result[0]===429){throttled=true;assert.equal(typeof result[1].error,"string");break;}assert.equal(result[0],400);}
+check("upload excedente 429 error",()=>assert.ok(throttled));
+r=await call("PUT","/user/upload",new FormData(),accounts[1].token);check("limite isolado por conta",()=>assert.equal(r[0],400));
 for(const a of accounts){r=await call("DELETE","/user",undefined,a.token);check("DELETE 204 vazio",()=>assert.deepEqual(r,[204,""]));}
 assert.equal(failures.length,0,failures.join("; "));
