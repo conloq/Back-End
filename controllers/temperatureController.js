@@ -1,3 +1,4 @@
+// code-wiki: Valida o proprietário antes de acessar receitas ou rampas, sem revelar recursos alheios.
 import TemperatureRecipe from "../services/temperatureService.js";
 import RecipeUser from "../services/recipeService.js";
 
@@ -10,9 +11,9 @@ const createTemperature = async (req, res) => {
 
         const recipe = await RecipeUser.showOneRecipe(recipeId);
 
-        if(!recipe) return res.status(400).json({error:"Receita não encontrada"});
+        if(!recipe) return res.status(404).json({error:"Receita não encontrada"});
 
-        if(userId != recipe.userId) return res.status(404).json({error:"Ação não permitida"});
+        if(userId != recipe.userId) return res.status(404).json({error:"Receita não encontrada"});
 
         const {
             maxTemperatureRamp, 
@@ -52,9 +53,9 @@ const showTemperature = async (req, res) => {
             
     const recipe = await RecipeUser.showOneRecipe(recipeId);
 
-    if(!recipe) return res.status(400).json({error:"Receita não encontrada"});
+    if(!recipe) return res.status(404).json({error:"Receita não encontrada"});
 
-    if(userId != recipe.userId) return res.status(404).json({error:"Ação não permitida"});
+    if(userId != recipe.userId) return res.status(404).json({error:"Receita não encontrada"});
 
     const temperatures = await TemperatureRecipe.showTemperature(recipeId);
 

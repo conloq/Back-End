@@ -1,3 +1,4 @@
+// code-wiki: Valida o proprietário antes de acessar receitas ou rampas, sem revelar recursos alheios.
 import RecipeUser from "../services/recipeService.js";
 
 const showRecipe = async (req, res) => {
@@ -21,11 +22,11 @@ const showOneRecipe = async (req, res) => {
 
         const recipe = await RecipeUser.showOneRecipe(recipeId);
 
-        if(!recipe) return res.status(400).json({error:"Receita não encontrada"});
+        if(!recipe) return res.status(404).json({error:"Receita não encontrada"});
 
         console.log(recipe);
 
-        if(recipe.userId != userId) return res.status(404).json({error:"Ação não permitida"});
+        if(recipe.userId != userId) return res.status(404).json({error:"Receita não encontrada"});
 
         return res.status(200).json({recipes: recipe});
     } catch (error) {
@@ -63,11 +64,11 @@ const deleteRecipe = async (req, res) => {
 
         const recipe = await RecipeUser.showOneRecipe(recipeId);
 
-        if(!recipe) return res.status(400).json({error:"Receita não encontrada"});
+        if(!recipe) return res.status(404).json({error:"Receita não encontrada"});
 
         console.log(recipe);
 
-        if(recipe.userId != userId) return res.status(404).json({error:"Ação não permitida"});
+        if(recipe.userId != userId) return res.status(404).json({error:"Receita não encontrada"});
 
         await RecipeUser.deleteRecipe(recipeId);
 
@@ -88,9 +89,9 @@ const updateRecipe = async (req, res) => {
 
         const recipe = await RecipeUser.showOneRecipe(recipeId);
 
-        if(!recipe) return res.status(400).json({error:"Receita não encontrada"});
+        if(!recipe) return res.status(404).json({error:"Receita não encontrada"});
 
-        if(recipe.userId != userId) return res.status(404).json({error:"Ação não permitida"});
+        if(recipe.userId != userId) return res.status(404).json({error:"Receita não encontrada"});
 
         await RecipeUser.updateUser(recipeId, nameRecipe);
         return res.status(200).json({message: "Receita atualizada com sucesso"});
