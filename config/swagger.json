@@ -701,7 +701,7 @@
                         }
                     }
                 },
-                "description": "Limite de 10 requisições por minuto por conta autenticada; contador local por processo."
+                "description": "Limite de 100 tentativas/minuto por IP antes do JWT e 10 requisições/minuto por conta autenticada; contadores locais por processo."
             }
         }
     },

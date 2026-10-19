@@ -58,11 +58,13 @@ nessa correção. A aprovação humana e os checks do PR continuam necessários.
 Main `f5492f8` integrada preservando `phone`, `urlImage`, Swagger do login e
 os três models/associações do João, sem alteração nos arquivos dos models.
 Migrations e models da main passaram em MySQL vazio. A suíte HTTP integrada
-passou em 18 cenários, incluindo limite 429 e isolamento por conta.
+passou em 19 cenários, incluindo limite 429 e isolamento por conta.
 
 O alerta CodeQL de upload sem rate limiting foi tratado com
-express-rate-limit 8.7.1 somente nesta rota: 10 requisições por minuto por
-conta autenticada, contador em memória por processo. Reinício zera o contador;
-mais de uma instância exigirá store compartilhado. Não confia em IP enviado
-por proxy. O contrato documenta 429 no envelope error. Cloudinary real e
+express-rate-limit 8.7.1 somente nesta rota: 100 tentativas por minuto por
+IP antes de verificar o JWT e 10 requisições por minuto por conta autenticada,
+contadores em memória por processo. Reinício zera o contador;
+mais de uma instância exigirá store compartilhado. O limite por conta não depende de IP. O deploy atrás de proxy precisa
+configurar trust proxy conforme a infraestrutura (#68); esta mudança não
+confia indiscriminadamente em X-Forwarded-For. O contrato documenta 429 no envelope error. Cloudinary real e
 inspeção binária continuam fora da comprovação apresentada.

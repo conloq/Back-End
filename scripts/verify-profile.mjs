@@ -30,4 +30,7 @@ for(let n=0;n<11;n++){const result=await call("PUT","/user/upload",new FormData(
 check("upload excedente 429 error",()=>assert.ok(throttled));
 r=await call("PUT","/user/upload",new FormData(),accounts[1].token);check("limite isolado por conta",()=>assert.equal(r[0],400));
 for(const a of accounts){r=await call("DELETE","/user",undefined,a.token);check("DELETE 204 vazio",()=>assert.deepEqual(r,[204,""]));}
+let entryThrottled=false;
+for(let n=0;n<101;n++){const result=await call("PUT","/user/upload",new FormData());if(result[0]===429){entryThrottled=true;assert.equal(typeof result[1].error,"string");break;}assert.equal(result[0],401);}
+check("tentativas sem token também limitadas",()=>assert.ok(entryThrottled));
 assert.equal(failures.length,0,failures.join("; "));
