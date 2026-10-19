@@ -3,6 +3,15 @@ import userService from "../services/userService.js";
 import { createHash } from "../services/argon2.js";
 import cloudinary from "../config/cloudinary.js";
 
+const isValidEmail = (email) => {
+    if (/\s/.test(email)) return false;
+    const at = email.indexOf("@");
+    if (at <= 0 || at !== email.lastIndexOf("@")) return false;
+    const domain = email.slice(at + 1);
+    const dot = domain.lastIndexOf(".");
+    return dot > 0 && dot < domain.length - 1;
+};
+
 const createUser = async (req, res) => {
     try {
         const {name = "", email = "", password = ""} = req.body;
@@ -16,7 +25,7 @@ const createUser = async (req, res) => {
 
         if(!cleanName || !cleanEmail) return res.status(400).json({error:"Nome ou E-mail não podem estar vazios"});
 
-        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) return res.status(400).json({error: "E-mail inválido"});
+        if(!isValidEmail(cleanEmail)) return res.status(400).json({error: "E-mail inválido"});
 
         if(!password) return res.status(400).json({error: "A senha não pode ser vazia"});
 
@@ -74,7 +83,7 @@ const updateUser = async (req,res) => {
 
         if(!cleanName || !cleanEmail) return res.status(400).json({error:"Nome ou E-mail não podem estar vazios"});
 
-        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) return res.status(400).json({error: "E-mail inválido"});
+        if(!isValidEmail(cleanEmail)) return res.status(400).json({error: "E-mail inválido"});
 
         if(password){   
             if(/\s/.test(password)) return res.status(400).json({ error: "A senha não pode conter espaços"});

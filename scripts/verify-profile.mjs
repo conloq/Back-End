@@ -19,6 +19,7 @@ for(const body of [{name:42,email:"valid@example.test",password:"pw"},{name:"Nam
  r=await call("POST","/user",body);check("cadastro inválido 400 "+JSON.stringify(body),()=>{assert.equal(r[0],400);assert.equal(typeof r[1].error,"string");});
 }
 r=await call("PUT","/user",{name:"Changed",email:"invalid-email"},token);check("atualização email inválido 400",()=>assert.equal(r[0],400));
+r=await call("POST","/user",{name:"Name",email:"!@!."+"!.".repeat(10000),password:"pw"});check("email adversarial longo 400",()=>assert.equal(r[0],400));
 r=await call("PUT","/user/upload",new FormData(),token);check("upload ausente 400 error",()=>assert.deepEqual(r,[400,{error:"Imagem não foi enviada"}]));
 for(const [name,type,size,expected] of [["JPEG válido","image/jpeg",100,200],["PNG válido","image/png",100,200],["tipo inválido","text/plain",100,415],["tipo parecido inválido","image/png-untrusted",100,415],["acima de 10 MB","image/png",10*1024*1024+1,413]]) {
  const form=new FormData();form.append("image",new Blob([new Uint8Array(size)],{type}),"test-file");r=await call("PUT","/user/upload",form,token);check(name,()=>{assert.equal(r[0],expected);if(expected===200)assert.equal(r[1].url,"https://example.test/profile.png");else assert.equal(typeof r[1].error,"string");});

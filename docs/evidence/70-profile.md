@@ -33,7 +33,7 @@ Forneça também DB_* e demais variáveis obrigatórias com valores de teste.
 O duplo recusa ambiente diferente de test/test-only; não entra no boot normal.
 O teste cria duas contas próprias e as remove no final.
 
-Node 24.22.0 e MySQL 8.4.9: 12 verificações falhavam antes; as 15 passaram
+Node 24.22.0 e MySQL 8.4.9: 12 verificações falhavam antes; as 16 passaram
 após a correção. Inclui próprio e-mail, conflito 409, dados inválidos 400,
 ausência de foto 400, MIME JPEG/PNG, tipos rejeitados 415, tamanho 413,
 persistência da URL sem hash e DELETE 204 vazio. Sintaxe e diff check passaram.
@@ -46,3 +46,9 @@ evidência de integração externa. O frontend precisa do PR pareado da #70.
 Contrato camelCase depende da #71 e login da #38. A Issue não está Done:
 faltam aprovação, merge, comprovação pós-merge e evidências externas.
 A #70 continua fora do escopo obrigatório do depósito conforme decisão atual.
+
+Revisão automática: CodeQL apontou risco de regex polinomial na primeira
+versão. Substituída por indexOf/lastIndexOf e verificação linear de espaços;
+entrada adversarial com 20 mil caracteres retorna 400. Aviso de ausência de
+rate limiting no upload permanece pendente; não foi criada política nova
+nessa correção. A aprovação humana e os checks do PR continuam necessários.
