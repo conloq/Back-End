@@ -1,3 +1,7 @@
+// code-wiki:start
+// Summary: Compartilha a conexao Sequelize com atributos camelCase e colunas snake_case.
+// Description: Define underscored para todos os models; o schema fisico vem das migrations.
+// code-wiki:end
 import { Sequelize } from "sequelize";
 
 const Connection = new Sequelize({
@@ -7,6 +11,9 @@ const Connection = new Sequelize({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
     timezone: "-03:00",
+    define: {
+        underscored: true
+    }
 })
 
 export default Connection;

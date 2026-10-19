@@ -1,3 +1,7 @@
+// code-wiki:start
+// Summary: Valida e atende cadastro, consulta, atualizacao e foto do usuario autenticado.
+// Description: O perfil recebe phone em camelCase, igual ao model e ao contrato publico.
+// code-wiki:end
 import userService from "../services/userService.js";
 import { createHash } from "../services/argon2.js";
 import cloudinary from "../config/cloudinary.js";
@@ -55,7 +59,7 @@ const deleteUser = async (req,res) => {
 
 const updateUser = async (req,res) => {
     try {
-        const {name = "", email = "", fone = "", password} = req.body;
+        const {name = "", email = "", phone = "", password} = req.body;
         const id = req.userId;
 
         const cleanName = name.trim();
@@ -68,12 +72,12 @@ const updateUser = async (req,res) => {
         }
         
         if(!password){
-            await userService.updateUser(id, cleanName, cleanEmail, fone);
+            await userService.updateUser(id, cleanName, cleanEmail, phone);
             return res.status(200).json({message: "Usuário atualizado com sucesso"});
         }
     
         const hashPassword = await createHash(password);
-        await userService.updateUser(id, cleanName, cleanEmail, fone, hashPassword);
+        await userService.updateUser(id, cleanName, cleanEmail, phone, hashPassword);
         return res.status(200).json({message: "Usuário atualizado com sucesso"});
     } catch (error) {
         res.status(500).json({error:"Erro interno do servidor"});
