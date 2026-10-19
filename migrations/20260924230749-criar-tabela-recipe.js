@@ -6,15 +6,16 @@ export default{
     await queryInterface.createTable('recipes',{
       id: {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
       name: {type: Sequelize.STRING, allowNull: false,},
-      userId:{type: Sequelize.INTEGER, allowNull: false,
+      user_id:{type: Sequelize.INTEGER, allowNull: false,
         references:{
             model: 'users',
-            key: 'id',
-            onDelete: 'CASCADE'
-          }
+            key: 'id'
+          },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
         },
-      createdAt: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')},
-      updatedAt: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')}
+      created_at: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')},
+      updated_at: {type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW')}
     })
   },
 
