@@ -29,7 +29,8 @@ JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY,
 FRONTEND_URL
 ```
 
-O `.env.example` com esses nomes entra pela [#39](https://github.com/conloq/mash/issues/39).
+Copie o `.env.example` para `.env` e preencha as variáveis do ambiente.
+Nunca versione o `.env` nem preencha segredos no arquivo de exemplo.
 
 ## Padrão de resposta (decisão da equipe: base: aula-05 DW3)
 
