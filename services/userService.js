@@ -1,3 +1,4 @@
+// code-wiki: Persiste perfis e impede o uso de e-mail pertencente a outra conta.
 import User from "../models/userModel.js";
 
 class UserService{
@@ -32,7 +33,7 @@ class UserService{
             where: {email}
         });
 
-        if(emailexists) throw new Error("EMAIL_EXISTS");
+        if(emailexists && emailexists.id != id) throw new Error("EMAIL_EXISTS");
 
         if(!password) {
             const update = await User.update({name, email, phone}, {where:{id}});

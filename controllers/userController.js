@@ -6,14 +6,29 @@ import userService from "../services/userService.js";
 import { createHash } from "../services/argon2.js";
 import cloudinary from "../config/cloudinary.js";
 
+const isValidEmail = (email) => {
+    if (/\s/.test(email)) return false;
+    const at = email.indexOf("@");
+    if (at <= 0 || at !== email.lastIndexOf("@")) return false;
+    const domain = email.slice(at + 1);
+    const dot = domain.lastIndexOf(".");
+    return dot > 0 && dot < domain.length - 1;
+};
+
 const createUser = async (req, res) => {
     try {
         const {name = "", email = "", password = ""} = req.body;
+
+        if(typeof name !== "string" || typeof email !== "string" || (password !== undefined && typeof password !== "string")) {
+            return res.status(400).json({error: "Nome, e-mail e senha devem ser texto"});
+        }
 
         const cleanName = name.trim();
         const cleanEmail = email.trim().toLowerCase();
 
         if(!cleanName || !cleanEmail) return res.status(400).json({error:"Nome ou E-mail não podem estar vazios"});
+
+        if(!isValidEmail(cleanEmail)) return res.status(400).json({error: "E-mail inválido"});
 
         if(!password) return res.status(400).json({error: "A senha não pode ser vazia"});
 
@@ -62,10 +77,16 @@ const updateUser = async (req,res) => {
         const {name = "", email = "", phone = "", password} = req.body;
         const id = req.userId;
 
+        if(typeof name !== "string" || typeof email !== "string" || (password !== undefined && typeof password !== "string")) {
+            return res.status(400).json({error: "Nome, e-mail e senha devem ser texto"});
+        }
+
         const cleanName = name.trim();
         const cleanEmail = email.trim().toLowerCase();
 
         if(!cleanName || !cleanEmail) return res.status(400).json({error:"Nome ou E-mail não podem estar vazios"});
+
+        if(!isValidEmail(cleanEmail)) return res.status(400).json({error: "E-mail inválido"});
 
         if(password){   
             if(/\s/.test(password)) return res.status(400).json({ error: "A senha não pode conter espaços"});
@@ -80,10 +101,10 @@ const updateUser = async (req,res) => {
         await userService.updateUser(id, cleanName, cleanEmail, phone, hashPassword);
         return res.status(200).json({message: "Usuário atualizado com sucesso"});
     } catch (error) {
-        res.status(500).json({error:"Erro interno do servidor"});
-            if(error.message === 'EMAIL_EXISTS') {
+        if(error.message === "EMAIL_EXISTS") {
             return res.status(409).json({error:"E-mail já existente"});
         }
+        return res.status(500).json({error:"Erro interno do servidor"});
     }
 }
 
