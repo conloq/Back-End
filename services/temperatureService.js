@@ -1,37 +1,12 @@
+// code-wiki:start
+// Summary: Persiste e ordena rampas pelos atributos de Temperature.
+// Description: Guarda orderRamp e recipeId, sem activeTemperature ou traducao de campos.
+// code-wiki:end
 import Temperature from "../models/temperatureModel.js";
-
-
 class TemperatureRecipe {
-    async createTemperature(
-        maxTemperatureRamp, 
-        minTemperatureRamp, 
-        maxTemperatureLimit, 
-        minTemperatureLimit, 
-        timer, 
-        initialization, 
-        idealTime, 
-        activeTemperature,
-        recipeId){
-            const temperatue = Temperature.create({
-                maxTemperatureRamp, 
-                minTemperatureRamp, 
-                maxTemperatureLimit,
-                minTemperatureLimit,
-                timer,
-                initialization,
-                idealTime,
-                activeTemperature,
-                recipeId});
-            return temperatue;
-    }
-
-    async showTemperature(recipe_id){
-        const temperatures = await Temperature.findAll({where:{
-            recipeId: recipe_id
-        }})
-
-        return temperatures;
+    async createTemperature(values) { return Temperature.create(values); }
+    async showTemperature(recipeId) {
+        return Temperature.findAll({ where: { recipeId }, order: [["orderRamp", "ASC"], ["id", "ASC"]] });
     }
 }
-
-export default new TemperatureRecipe;
+export default new TemperatureRecipe();
