@@ -27,14 +27,14 @@ r = await call("GET", "/user", undefined, "invalid");
 check("token inválido 401", () => { assert.equal(r[0],401); assert.equal(r[1].error,"Token inválido ou expirado"); });
 r = await call("GET", "/user", undefined,tokens[0]);
 check("perfil sem hash", () => { assert.equal(r[0],200); assert.ok(!("password" in r[1].user)); });
-r = await call("POST", "/receitas", {name:`Auth recipe ${unique}`},tokens[0]); assert.equal(r[0],201); const id=r[1].recipe.id;
-for (const [method,path,body] of [["PUT",`/receitas/${id}`,{name:"Forbidden"}],["DELETE",`/receitas/${id}`],["GET",`/receitas/temperatura/${id}`],["POST",`/receitas/temperatura/${id}`,{}]]) {
+r = await call("POST", "/recipes", {name:`Auth recipe ${unique}`},tokens[0]); assert.equal(r[0],201); const id=r[1].recipe.id;
+for (const [method,path,body] of [["PUT",`/recipes/${id}`,{name:"Forbidden"}],["DELETE",`/recipes/${id}`],["GET",`/recipes/${id}/temperatures`],["POST",`/recipes/${id}/temperatures`,{}]]) {
     const foreign = await call(method,path,body,tokens[1]);
     const absent = await call(method,path.replace(String(id),"2147483647"),body,tokens[1]);
     check(`${method} ${path}: alheio e inexistente indistinguíveis`,()=> { assert.deepEqual(foreign,[404,{error:"Receita não encontrada"}]); assert.deepEqual(absent,foreign); });
 }
-r=await call("GET","/receitas",undefined,tokens[1]);
-check("listagem filtra por dono",()=> { assert.equal(r[0],200); assert.ok(!r[1].recipe.some(v=>v.id===id)); });
+r=await call("GET","/recipes",undefined,tokens[1]);
+check("listagem filtra por dono",()=> { assert.equal(r[0],200); assert.ok(!r[1].recipes.some(v=>v.id===id)); });
 const doc=JSON.parse(readFileSync(new URL("../config/swagger.json",import.meta.url),"utf8"));
 check("Swagger Bearer JWT",()=> { assert.equal(doc.components.securitySchemes.bearerAuth.scheme,"bearer"); });
 check("Swagger login urlImage e erros",()=> { const responses=doc.paths["/login"].post.responses; assert.ok(responses[200].content["application/json"].schema.properties.user.properties.urlImage); for(const s of [400,401,500]) assert.ok(responses[s].content["application/json"].schema.properties.error); });
