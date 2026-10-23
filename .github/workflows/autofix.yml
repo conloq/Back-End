@@ -2,9 +2,11 @@ name: autofix.ci
 on:
   pull_request:
     paths-ignore:
-      - ".github/**"
+      - '.github/**'
   push:
-    branches: [ "main" ]
+    paths-ignore:
+      - '.github/**'
+    branches: ['main']
 permissions:
   contents: read
 jobs:
