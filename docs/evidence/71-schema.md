@@ -6,18 +6,18 @@ Revalidação em 19/10/2026 sobre `conloq/Back-End` `2310ab92b5c9d655ac6735133ac
 
 Classificação: **IMPLEMENTATION BUG**. A decisão permanece JSON/models camelCase e banco snake_case.
 
-| Critério                                                | Antes    | Delta desta branch                                                |
-| ------------------------------------------------------- | -------- | ----------------------------------------------------------------- |
-| Tabelas users/recipes/temperatures, sem sync individual | DONE     | Preservado                                                        |
-| Models camelCase e FKs não anuláveis                    | DONE     | Preservado                                                        |
-| define.underscored                                      | NOT DONE | Configurado na conexão                                            |
-| Colunas físicas e timestamps snake_case                 | NOT DONE | Corrigidos nas três migrations iniciais, antes do primeiro deploy |
-| FK recipes → users com CASCADE                          | PARTIAL  | Ações movidas para o nível da coluna, como exige a queryInterface |
-| Perfil recebe phone                                     | PARTIAL  | Controller usa phone nas duas variantes de atualização            |
-| Ambiente production, prestart e bootstrap sem sync      | DONE     | Preservados e exercitados                                         |
-| README de migrations                                    | PARTIAL  | Removidas afirmações vencidas e incluída tabela dos comandos      |
-| Frontend de perfil                                      | NOT DONE | PR separado no conloq/frontend, também vinculado à #71            |
-| Revisão, merge e revalidação da main                    | NOT DONE | Aguardam o fluxo do PR; a issue não está Done                     |
+| Critério | Antes | Delta desta branch |
+|---|---|---|
+| Tabelas users/recipes/temperatures, sem sync individual | DONE | Preservado |
+| Models camelCase e FKs não anuláveis | DONE | Preservado |
+| define.underscored | NOT DONE | Configurado na conexão |
+| Colunas físicas e timestamps snake_case | NOT DONE | Corrigidos nas três migrations iniciais, antes do primeiro deploy |
+| FK recipes → users com CASCADE | PARTIAL | Ações movidas para o nível da coluna, como exige a queryInterface |
+| Perfil recebe phone | PARTIAL | Controller usa phone nas duas variantes de atualização |
+| Ambiente production, prestart e bootstrap sem sync | DONE | Preservados e exercitados |
+| README de migrations | PARTIAL | Removidas afirmações vencidas e incluída tabela dos comandos |
+| Frontend de perfil | NOT DONE | PR separado no conloq/frontend, também vinculado à #71 |
+| Revisão, merge e revalidação da main | NOT DONE | Aguardam o fluxo do PR; a issue não está Done |
 
 A reprodução inicial aplicou as três migrations sem erro, mas `information_schema.COLUMNS` mostrou `urlImage`, `createdAt` e `updatedAt` em `users`. `scripts/verify-schema.mjs` falhou na comparação com `url_image`, `created_at` e `updated_at`.
 
@@ -62,15 +62,15 @@ O preload faz o processo falhar se `Connection.sync()` ou `Model.sync()` forem c
 
 Resultados observados com NODE_ENV=production:
 
-| Cenário                                                        | Resultado                                                      |
-| -------------------------------------------------------------- | -------------------------------------------------------------- |
-| npm start aplica prestart e sobe com as traps de sync ativas   | PASS                                                           |
-| GET /api-docs/                                                 | 200                                                            |
-| POST /user com conta sintética não Gmail                       | 201                                                            |
-| POST /login dessa conta                                        | 200; JWT não transcrito na evidência                           |
-| GET /user autenticado                                          | 200, phone/urlImage/createdAt/updatedAt, sem password          |
-| PUT /user com phone e um novo e-mail disponível; GET posterior | 200; telefone persistido                                       |
-| POST /receitas na rota atual                                   | 201; JSON com userId e timestamps camelCase, banco com user_id |
+| Cenário | Resultado |
+|---|---|
+| npm start aplica prestart e sobe com as traps de sync ativas | PASS |
+| GET /api-docs/ | 200 |
+| POST /user com conta sintética não Gmail | 201 |
+| POST /login dessa conta | 200; JWT não transcrito na evidência |
+| GET /user autenticado | 200, phone/urlImage/createdAt/updatedAt, sem password |
+| PUT /user com phone e um novo e-mail disponível; GET posterior | 200; telefone persistido |
+| POST /receitas na rota atual | 201; JSON com userId e timestamps camelCase, banco com user_id |
 
 O login ainda devolve a chave pública `image`: divergência da #38, mantida fora desta branch. O caso de atualizar com o próprio e-mail existente também pertence à #70. As rotas em inglês e as validações de rampa continuam nas #32/#97.
 

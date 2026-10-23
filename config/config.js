@@ -6,7 +6,7 @@ const db = {
   database: process.env.DB_DATABASE,
   host: process.env.DB_HOST,
   dialect: 'mysql',
-  timezone: '-03:00',
-};
+  timezone: '-03:00'
+}
 
 export default { development: db, production: db };
