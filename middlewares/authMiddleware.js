@@ -1,27 +1,27 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 const authMiddleware = (req, res, next) => {
-    const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorization;
 
-    if(!authHeader) return res.status(401).json({error: "Token não informado"});
+  if (!authHeader) return res.status(401).json({ error: 'Token não informado' });
 
-    const parts = authHeader.split(' ');
-    if(parts.length != 2 || parts[0] != 'Bearer') {
-        return res.status(401).json({error: "Formato de Token inválido"});
-    }
+  const parts = authHeader.split(' ');
+  if (parts.length != 2 || parts[0] != 'Bearer') {
+    return res.status(401).json({ error: 'Formato de Token inválido' });
+  }
 
-    const token = parts[1];
-    const secretKey = process.env.JWT_SECRET_KEY;
+  const token = parts[1];
+  const secretKey = process.env.JWT_SECRET_KEY;
 
-    try {
-        const decoded = jwt.verify(token, secretKey);
+  try {
+    const decoded = jwt.verify(token, secretKey);
 
-        req.userId = decoded.id;
-        
-        return next();
-    } catch (error) {
-        return res.status(401).json({error: "Token inválido ou expirado"});
-    }
-}
+    req.userId = decoded.id;
+
+    return next();
+  } catch (error) {
+    return res.status(401).json({ error: 'Token inválido ou expirado' });
+  }
+};
 
 export default authMiddleware;
