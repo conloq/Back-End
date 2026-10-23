@@ -94,8 +94,8 @@ Para conferir o schema em um banco descartável vazio, configure `DB_DATABASE` c
 
 ## Regras de contribuição
 
-- **Nunca commitar direto na `main`**: branch própria + pull request + peer review (ver [#35](https://github.com/conloq/mash/issues/35)). O repositório é público e a `main` é protegida: exige Pull Request com 1 aprovação.
-- Revisão automática: o `.github/CODEOWNERS` pede a revisão do Tech Lead, o CodeRabbit comenta o Pull Request em português (`.coderabbit.yaml`) e o CodeQL analisa o código (Security > Code scanning). Nenhum deles aprova ou bloqueia o merge.
+- **Nunca commitar direto na `main`**: branch própria + Pull Request obrigatório (ver [#35](https://github.com/conloq/mash/issues/35)). Aprovação humana obrigatória: **0**; revisão por pares pode ocorrer, mas não é requisito de aprovação.
+- **Proteções e automação:** CodeRabbit pode comentar e CodeQL pode reportar achados. Essas ferramentas, por si só, não definem um gate de merge. Consulte ao vivo as branch protections, rulesets, checks obrigatórios, resolução de conversas e permissões antes de afirmar se o merge está liberado.
 - Conventional Commits em pt-BR: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`. Branch `<tipo>/<número da issue>-<descrição-curta>`; o Pull Request fecha a issue com `Closes conloq/mash#NN`.
 - Cada rota entregue é documentada em `config/swagger.json` no mesmo Pull Request e tem a validação manual registrada na [#41](https://github.com/conloq/mash/issues/41).
 - Épicos do depósito em `conloq/mash`: [#30](https://github.com/conloq/mash/issues/30) (base da API: padrões, schema e evidências), [#83](https://github.com/conloq/mash/issues/83) (conta e segurança), [#80](https://github.com/conloq/mash/issues/80) (receitas e rampas), [#81](https://github.com/conloq/mash/issues/81) (lotes) e [#82](https://github.com/conloq/mash/issues/82) (teste de iodo: envio, consulta e histórico). A análise por visão computacional (OpenCV, [#34](https://github.com/conloq/mash/issues/34)) fica para o próximo semestre.
