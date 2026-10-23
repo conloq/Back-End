@@ -3,9 +3,13 @@ on:
   pull_request:
     paths-ignore:
       - '.github/**'
+      - 'AGENTS.md'
+      - 'README.md'
   push:
     paths-ignore:
       - '.github/**'
+      - 'AGENTS.md'
+      - 'README.md'
     branches: ['main']
 permissions:
   contents: read
