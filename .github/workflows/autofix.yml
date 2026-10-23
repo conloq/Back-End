@@ -1,0 +1,12 @@
+name: autofix.ci
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+permissions:
+  contents: read
+jobs:
+  autofix:
+    uses: conloq/.github/.github/workflows/autofix.yml@main
+    with:
+      formatter: prettier
