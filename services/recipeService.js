@@ -20,7 +20,7 @@ class RecipeUser {
     async deleteRecipe(id) {
         if (await Recipe.destroy({ where: { id } }) === 0) throw new Error("ID_NOT_EXISTING");
     }
-    async updateUser(id, name, userId) {
+    async updateRecipe(id, name, userId) {
         if (await this.showRecipeByName(name, userId, id)) throw new Error("RECIPE_EXISTS");
         return Recipe.update({ name }, { where: { id, userId } });
     }

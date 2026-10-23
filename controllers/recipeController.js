@@ -27,7 +27,7 @@ const createRecipe = async (req, res) => {
         return res.status(201).json({ message: "Receita criada com sucesso", recipe });
     } catch (error) { return failure(res, error); }
 };
-// Operacoes existentes preservadas para a tela; regra de lotes permanece na #93.
+// O 409 "Receita possui lotes vinculados" depende do model de lote (#31).
 const deleteRecipe = async (req, res) => {
     if (!validId(req.params.id)) return res.status(400).json({ error: "ID inválido" });
     try {
@@ -43,7 +43,7 @@ const updateRecipe = async (req, res) => {
     try {
         const recipe = await RecipeUser.showOneRecipe(req.params.id);
         if (!recipe || recipe.userId !== req.userId) return res.status(404).json({ error: "Receita não encontrada" });
-        await RecipeUser.updateUser(req.params.id, req.body.name.trim(), req.userId);
+        await RecipeUser.updateRecipe(req.params.id, req.body.name.trim(), req.userId);
         return res.status(200).json({ message: "Receita atualizada com sucesso" });
     } catch (error) { return failure(res, error); }
 };
