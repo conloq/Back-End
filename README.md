@@ -35,7 +35,6 @@ Nunca versione o `.env` nem preencha segredos no arquivo de exemplo.
 ## Padrão de resposta (decisão da equipe: base: aula-05 DW3)
 
 **Sucesso:**
-
 - Operação sem entidade: `{ "message": "<texto>" }`, ex.: `{ "message": "Receita criada com sucesso" }`
 - Operação que devolve entidade: `{ "message": "<texto>", "<singular>": { ... } }`
 - Detalhe: `{ "<singular>": { ... } }`, ex.: `{ "recipe": { ... } }`
@@ -43,7 +42,6 @@ Nunca versione o `.env` nem preencha segredos no arquivo de exemplo.
 - **Não usar wrapper genérico `data`.**
 
 **Erro** (string direta em português, sem código interno):
-
 - `400`: `{ "error": "<regra de validação>" }`, ex.: `{ "error": "Nome é obrigatório" }`
 - `401`: `{ "error": "Token inválido ou expirado" }`
 - `404`: `{ "error": "<Recurso> não encontrado" }`: também para recurso de outro usuário, em leitura, alteração e exclusão (não revelar existência)
@@ -74,14 +72,14 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 
 ### Como rodar as migrations
 
-| Comando                                              | Resultado                                                        |
-| ---------------------------------------------------- | ---------------------------------------------------------------- |
-| `CREATE DATABASE mash;`                              | Cria o banco vazio uma vez; a API não cria o banco               |
-| `npm run db:migrate`                                 | Aplica as migrations pendentes na ordem dos arquivos             |
-| `npm start`                                          | Aplica migrations pelo `prestart` e inicia a API                 |
-| `npx sequelize-cli db:migrate:status`                | Lista migrations aplicadas e pendentes                           |
-| `npm run db:migrate:undo`                            | Desfaz a última migration no ambiente local                      |
-| `npm run db:migrate:undo:all`                        | Desfaz todas no ambiente local; não usar no banco publicado      |
+| Comando | Resultado |
+|---|---|
+| `CREATE DATABASE mash;` | Cria o banco vazio uma vez; a API não cria o banco |
+| `npm run db:migrate` | Aplica as migrations pendentes na ordem dos arquivos |
+| `npm start` | Aplica migrations pelo `prestart` e inicia a API |
+| `npx sequelize-cli db:migrate:status` | Lista migrations aplicadas e pendentes |
+| `npm run db:migrate:undo` | Desfaz a última migration no ambiente local |
+| `npm run db:migrate:undo:all` | Desfaz todas no ambiente local; não usar no banco publicado |
 | `npx sequelize-cli migration:generate --name <nome>` | Cria um arquivo que deve usar `export default` neste projeto ESM |
 
 Os ambientes `development` e `production` usam as variáveis `DB_*`. Banco que já recebeu migrations exige uma nova migration para mudar seu schema; as três iniciais foram reconciliadas antes do primeiro deploy, conforme a #71.
