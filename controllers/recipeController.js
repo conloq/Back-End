@@ -31,14 +31,12 @@ const showOneRecipe = async (req, res) => {
 };
 const createRecipe = async (req, res) => {
   if (!validName(req.body?.name))
-    return res
-      .status(400)
-      .json({
-        error:
-          typeof req.body?.name === 'string' && req.body.name.trim().length > 255
-            ? 'Nome não pode exceder 255 caracteres'
-            : 'Nome não pode estar vazio',
-      });
+    return res.status(400).json({
+      error:
+        typeof req.body?.name === 'string' && req.body.name.trim().length > 255
+          ? 'Nome não pode exceder 255 caracteres'
+          : 'Nome não pode estar vazio',
+    });
   try {
     const recipe = await RecipeUser.createRecipe(req.body.name.trim(), req.userId);
     return res.status(201).json({ message: 'Receita criada com sucesso', recipe });
