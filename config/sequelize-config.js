@@ -4,9 +4,7 @@
 // code-wiki:end
 import { Sequelize } from 'sequelize';
 
-const dialectOptions = process.env.DB_SSL_CA
-  ? { ssl: { ca: process.env.DB_SSL_CA } }
-  : undefined;
+const dialectOptions = process.env.DB_SSL_CA ? { ssl: { ca: process.env.DB_SSL_CA } } : undefined;
 
 const Connection = new Sequelize({
   dialect: 'mysql',

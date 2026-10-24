@@ -1,8 +1,6 @@
 import 'dotenv/config';
 
-const dialectOptions = process.env.DB_SSL_CA
-  ? { ssl: { ca: process.env.DB_SSL_CA } }
-  : undefined;
+const dialectOptions = process.env.DB_SSL_CA ? { ssl: { ca: process.env.DB_SSL_CA } } : undefined;
 
 const db = {
   username: process.env.DB_USERNAME,
