@@ -4,9 +4,15 @@
 // code-wiki:end
 import { Sequelize } from 'sequelize';
 
-const dialectOptions = process.env.DB_SSL === 'true' || process.env.DB_SSL_CA
-  ? { ssl: { minVersion: 'TLSv1.2', ...(process.env.DB_SSL_CA ? { ca: process.env.DB_SSL_CA } : {}) } }
-  : undefined;
+const dialectOptions =
+  process.env.DB_SSL === 'true' || process.env.DB_SSL_CA
+    ? {
+        ssl: {
+          minVersion: 'TLSv1.2',
+          ...(process.env.DB_SSL_CA ? { ca: process.env.DB_SSL_CA } : {}),
+        },
+      }
+    : undefined;
 
 const Connection = new Sequelize({
   dialect: 'mysql',

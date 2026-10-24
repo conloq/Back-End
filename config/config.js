@@ -1,8 +1,14 @@
 import 'dotenv/config';
 
-const dialectOptions = process.env.DB_SSL === 'true' || process.env.DB_SSL_CA
-  ? { ssl: { minVersion: 'TLSv1.2', ...(process.env.DB_SSL_CA ? { ca: process.env.DB_SSL_CA } : {}) } }
-  : undefined;
+const dialectOptions =
+  process.env.DB_SSL === 'true' || process.env.DB_SSL_CA
+    ? {
+        ssl: {
+          minVersion: 'TLSv1.2',
+          ...(process.env.DB_SSL_CA ? { ca: process.env.DB_SSL_CA } : {}),
+        },
+      }
+    : undefined;
 
 const db = {
   username: process.env.DB_USERNAME,
