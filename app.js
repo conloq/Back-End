@@ -27,6 +27,8 @@ authDB();
 
 const app = express();
 
+app.get('/health', (req, res) => res.status(200).json({ message: 'ok' }));
+
 // CORS: libera o frontend (porta 4000) a chamar a API direto do navegador
 const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:4000';
 app.use((req, res, next) => {
@@ -46,7 +48,7 @@ app.use(RouterRecipe);
 app.use(RouterSwagger);
 app.use(RouterTemperature);
 
-const port = 8080;
+const port = Number(process.env.PORT || 8080);
 app.listen(port, (e) => {
   if (e) console.error('Ocorreu um erro ao iniciar o servidor');
   console.log(`Servidor iniciado http://localhost:${port}`);
