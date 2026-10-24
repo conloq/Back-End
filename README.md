@@ -16,15 +16,15 @@ API REST do Mash (migração do app monolítico [`conloq/mash`](https://github.c
 npm install
 # o banco precisa existir antes: CREATE DATABASE mash;
 npm run db:migrate   # aplica as migrations pendentes
-npm start            # porta 8080
+npm start            # aplica migrations via prestart e inicia em PORT (local: 8080)
 ```
 
-A API usa a porta 8080; o frontend usa a 4000.
+Render define `PORT`; localmente a API usa 8080 por padrão. O frontend local usa a porta 4000.
 
 ## Variáveis de ambiente (`.env`: NUNCA commitar valores reais)
 
 ```
-DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE,
+DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_SSL_CA, DB_DATABASE,
 JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY,
 FRONTEND_URL
 ```
@@ -95,6 +95,19 @@ Para conferir o schema em um banco descartável vazio, configure `DB_DATABASE` c
 - API no Render (plano gratuito) e MySQL gratuito externo (Aiven), porque o Render gratuito não oferece MySQL. Imagens no Cloudinary.
 - O plano gratuito dorme após 15 min sem tráfego: aquecer a API antes da demonstração. A [#68](https://github.com/conloq/mash/issues/68) cria o `GET /health` para o Render saber se a API subiu.
 - Definir `FRONTEND_URL` com a URL do frontend publicado ([#69](https://github.com/conloq/mash/issues/69)).
+
+### Configurar o deploy no Render
+
+- Repositório: `conloq/Back-End`, branch `main`, runtime Node, diretório raiz vazio.
+- Build command: `npm install`. Start command: `npm run db:migrate && node app.js`.
+- Health check path: `/health`. A rota responde `200 { "message": "ok" }`.
+- Configure `NODE_ENV=production`, os dados `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE`, o certificado `DB_SSL_CA`, `JWT_SECRET_KEY`, as três variáveis do Cloudinary e `FRONTEND_URL`. O Render fornece `PORT` automaticamente.
+- No Aiven, use o host, a porta, o usuário, a senha, o banco existente (por exemplo `defaultdb`) e o certificado CA apresentados no painel. Nunca versione os valores.
+- No plano gratuito, o serviço pode dormir após inatividade; faça uma chamada à API antes da demonstração.
+
+### Rollback
+
+Use o rollback do Render para voltar ao deploy anterior da aplicação. Isso não desfaz migrations. Antes de qualquer reversão de schema, faça backup e confirme que o `down` da migration é seguro para os dados atuais; não execute `db:migrate:undo` automaticamente em produção.
 
 ## Regras de contribuição
 
