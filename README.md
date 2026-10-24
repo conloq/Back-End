@@ -25,8 +25,7 @@ Render define `PORT`; localmente a API usa 8080 por padrão. O frontend local us
 
 ```
 DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_SSL, DB_SSL_CA, DB_DATABASE,
-JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY,
-FRONTEND_URL
+JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY
 ```
 
 Copie o `.env.example` para `.env` e preencha as variáveis do ambiente.
@@ -90,18 +89,19 @@ Os ambientes `development` e `production` usam as variáveis `DB_*`. Banco que j
 
 Para conferir o schema em um banco descartável vazio, configure `DB_DATABASE` com o prefixo `mash_71_test_` e execute `node scripts/verify-schema.mjs`. O verificador aplica migrations e testa colunas, FKs, timestamps, cascatas, JSON camelCase e reaplicação sem mudanças; recusa banco não vazio e não apaga schemas. A evidência da #71 está em `docs/evidence/71-schema.md`.
 
+`FRONTEND_URL` é opcional e só altera o cabeçalho CORS para clientes que chamam a API diretamente do navegador. O frontend EJS atual chama a API no servidor e não precisa dessa variável.
+
 ## Deploy (decisão de 13/10/2026, [#61](https://github.com/conloq/mash/issues/61))
 
 - API no Render (plano gratuito) e MySQL gerenciado externo (TiDB Cloud), porque o Render gratuito não oferece MySQL. Imagens no Cloudinary.
 - O plano gratuito dorme após 15 min sem tráfego: aquecer a API antes da demonstração. A [#68](https://github.com/conloq/mash/issues/68) cria o `GET /health` para o Render saber se a API subiu.
-- Definir `FRONTEND_URL` com a URL do frontend publicado ([#69](https://github.com/conloq/mash/issues/69)).
 
 ### Configurar o deploy no Render
 
 - Repositório: `conloq/Back-End`, branch `main`, runtime Node, diretório raiz vazio.
 - Build command: `npm install`. Start command: `npm run db:migrate && node app.js`.
 - Health check path: `/health`. A rota responde `200 { "message": "ok" }`.
-- Configure `NODE_ENV=production`, `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE`, `DB_SSL=true`, `JWT_SECRET_KEY`, as três variáveis do Cloudinary e `FRONTEND_URL`. O Render fornece `PORT` automaticamente.
+- Configure `NODE_ENV=production`, `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE`, `DB_SSL=true`, `JWT_SECRET_KEY` e as três variáveis do Cloudinary. O Render fornece `PORT` automaticamente. `FRONTEND_URL` não é necessária para o frontend EJS.
 - No TiDB Cloud, copie host, porta, usuário, senha e banco da opção de conexão pública MySQL. A porta é a exibida pelo painel (Starter normalmente usa 4000). TiDB Cloud exige TLS; `DB_SSL_CA` é opcional para Starter quando a cadeia padrão do Node é aceita e deve receber o PEM se o painel/plano fornecer uma CA específica. Nunca versione valores reais. TiDB Cloud só suporta `lower_case_table_names=2`; mantenha nomes físicos de tabelas em minúsculas e valide as migrations no cluster escolhido.
 - No plano gratuito, o serviço pode dormir após inatividade; faça uma chamada à API antes da demonstração.
 
