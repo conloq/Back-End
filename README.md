@@ -7,7 +7,7 @@ API REST do Mash (migração do app monolítico [`conloq/mash`](https://github.c
 - Node.js (ESM), Express 5, Sequelize, MySQL (database `mash`)
 - JWT Bearer + Argon2id (memoryCost 2^16, timeCost 3, parallelism 1)
 - Multer (memoryStorage) → Cloudinary
-- CORS liberado para o frontend (`FRONTEND_URL`, padrão `http://localhost:4000`): o navegador chama a API direto, com o token no `Authorization: Bearer`
+- O frontend Express chama a API server-to-server com `Authorization: Bearer`; CORS para `FRONTEND_URL` continua configurado, mas não é usado pelo fluxo EJS same-origin.
 - Swagger: `GET /api-docs`
 
 ## Como rodar
@@ -59,6 +59,7 @@ Nunca versione o `.env` nem preencha segredos no arquivo de exemplo.
 - O **banco** usa snake_case em inglês, nas tabelas e colunas: `user_id`, `recipe_id`, `url_image`, `mash_start`, `collected_at`, `created_at`, `updated_at`.
 - Os models declaram os atributos em camelCase e a conexão do Sequelize usa `define: { underscored: true }`, que mapeia as colunas em snake_case. As migrations declaram esses nomes físicos; não há código de tradução do JSON.
 - Tabelas em inglês, no plural: `users`, `recipes`, `temperatures`, `lots`, `analyses`.
+- `sessions` é armazenamento técnico do frontend (`express-session`), sem model de domínio ou endpoint da API.
 - Rotas em inglês: coleção no plural (`/recipes`, `/lots`, `/analyses`), recurso único no singular (`/user`), `login` à parte; parâmetro de rota `:id`.
 - Colunas em português mudam de nome: `nome` → `name`, `fone` → `phone`.
 - A regra de 13/10 (banco em camelCase) foi revertida em 15/10; a de 28/09 (snake_case também no JSON) continua substituída.
@@ -70,6 +71,7 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 - O schema vem das **migrations do Sequelize**: toda tabela ou coluna nova entra por um arquivo em `migrations/`, aplicado com `npm run db:migrate` antes de `npm start` e a cada deploy.
 - O `prestart` executa `npm run db:migrate` antes de subir a API. O bootstrap não chama `Connection.sync()`; os models não criam nem alteram tabelas.
 - Migration já aplicada no banco publicado não se edita: cria-se uma nova.
+- A migration `sessions` cria a tabela usada pelo frontend para persistir sessões; a conta de conexão do frontend deve ter apenas permissões DML nessa tabela.
 - Comandos: `npx sequelize-cli db:migrate:status` mostra o que já rodou; `npm run db:migrate:undo` desfaz a última (nunca no banco publicado).
 
 ### Como rodar as migrations
