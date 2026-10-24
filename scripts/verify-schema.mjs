@@ -41,9 +41,10 @@ try {
       'created_at',
       'updated_at',
     ],
+    sessions: ['session_id', 'expires', 'data'],
   };
   const [columns] = await sql.query(
-    'SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = ? ORDER BY TABLE_NAME, ORDINAL_POSITION',
+    'SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = ? ORDER BY TABLE_NAME, ORDINAL_POSITION',
     [process.env.DB_DATABASE],
   );
   console.log('Schema observado:', JSON.stringify(columns));
@@ -58,13 +59,32 @@ try {
       names,
       table,
     );
-    for (const name of ['created_at', 'updated_at']) {
-      assert.equal(
-        columns.find((c) => c.TABLE_NAME === table && c.COLUMN_NAME === name).IS_NULLABLE,
-        'NO',
-      );
-    }
+    if (table !== 'sessions')
+      for (const name of ['created_at', 'updated_at']) {
+        assert.equal(
+          columns.find((c) => c.TABLE_NAME === table && c.COLUMN_NAME === name).IS_NULLABLE,
+          'NO',
+        );
+      }
   }
+  assert.equal(
+    columns.find((c) => c.TABLE_NAME === 'sessions' && c.COLUMN_NAME === 'session_id').DATA_TYPE,
+    'varchar',
+  );
+  assert.match(
+    columns.find((c) => c.TABLE_NAME === 'sessions' && c.COLUMN_NAME === 'expires').COLUMN_TYPE,
+    /^int(?:\(10\))? unsigned$/,
+  );
+  assert.equal(
+    columns.find((c) => c.TABLE_NAME === 'sessions' && c.COLUMN_NAME === 'data').DATA_TYPE,
+    'mediumtext',
+  );
+  const [sessionIndexes] = await sql.query('SHOW INDEX FROM sessions');
+  assert.ok(
+    sessionIndexes.some(
+      (index) => index.Key_name === 'PRIMARY' && index.Column_name === 'session_id',
+    ),
+  );
   const [keys] = await sql.query(
     `SELECT k.TABLE_NAME, k.COLUMN_NAME, k.REFERENCED_TABLE_NAME, k.REFERENCED_COLUMN_NAME, r.DELETE_RULE, r.UPDATE_RULE
         FROM information_schema.KEY_COLUMN_USAGE k JOIN information_schema.REFERENTIAL_CONSTRAINTS r
@@ -148,14 +168,14 @@ try {
   assert.equal(await Recipe.count(), 0);
   assert.equal(await Temperature.count(), 0);
   const [meta] = await sql.query('SELECT name FROM SequelizeMeta ORDER BY name');
-  assert.equal(meta.length, 3);
+  assert.equal(meta.length, 4);
   execFileSync('npm', ['run', 'db:migrate'], { stdio: 'inherit' });
   const [metaAgain] = await sql.query('SELECT name FROM SequelizeMeta ORDER BY name');
   assert.deepEqual(metaAgain, meta);
   const bootstrap = readFileSync(new URL('../app.js', import.meta.url), 'utf8');
   assert.doesNotMatch(bootstrap, /Connection\s*\.\s*sync\s*\(/);
   console.log(
-    'PASS: migrations do zero, nomes snake_case, FKs, timestamps, models/JSON camelCase, cascatas, reaplicacao sem mudancas e bootstrap sem sync().',
+    'PASS: migrations do zero, sessões, nomes snake_case, FKs, timestamps, models/JSON camelCase, cascatas, reaplicacao sem mudancas e bootstrap sem sync().',
   );
 } finally {
   if (modelsConnection) await modelsConnection.close();
