@@ -81,7 +81,9 @@ try {
   );
   const [sessionIndexes] = await sql.query('SHOW INDEX FROM sessions');
   assert.ok(
-    sessionIndexes.some((index) => index.Key_name === 'PRIMARY' && index.Column_name === 'session_id'),
+    sessionIndexes.some(
+      (index) => index.Key_name === 'PRIMARY' && index.Column_name === 'session_id',
+    ),
   );
   const [keys] = await sql.query(
     `SELECT k.TABLE_NAME, k.COLUMN_NAME, k.REFERENCED_TABLE_NAME, k.REFERENCED_COLUMN_NAME, r.DELETE_RULE, r.UPDATE_RULE
