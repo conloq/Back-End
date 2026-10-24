@@ -102,7 +102,7 @@ Para conferir o schema em um banco descartável vazio, configure `DB_DATABASE` c
 - Build command: `npm install`. Start command: `npm run db:migrate && node app.js`.
 - Health check path: `/health`. A rota responde `200 { "message": "ok" }`.
 - Configure `NODE_ENV=production`, `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE`, `DB_SSL=true`, `JWT_SECRET_KEY`, as três variáveis do Cloudinary e `FRONTEND_URL`. O Render fornece `PORT` automaticamente.
-- No TiDB Cloud, copie host, porta, usuário, senha e banco da opção de conexão pública MySQL. A porta é a exibida pelo painel (Starter normalmente usa 4000). TiDB Cloud exige TLS; `DB_SSL_CA` é opcional para Starter quando a cadeia padrão do Node é aceita e deve receber o PEM se o painel/plano fornecer uma CA específica. Nunca versione valores reais.
+- No TiDB Cloud, copie host, porta, usuário, senha e banco da opção de conexão pública MySQL. A porta é a exibida pelo painel (Starter normalmente usa 4000). TiDB Cloud exige TLS; `DB_SSL_CA` é opcional para Starter quando a cadeia padrão do Node é aceita e deve receber o PEM se o painel/plano fornecer uma CA específica. Nunca versione valores reais. TiDB Cloud só suporta `lower_case_table_names=2`; mantenha nomes físicos de tabelas em minúsculas e valide as migrations no cluster escolhido.
 - No plano gratuito, o serviço pode dormir após inatividade; faça uma chamada à API antes da demonstração.
 
 ### Rollback
