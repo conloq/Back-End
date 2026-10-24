@@ -95,6 +95,7 @@ Para conferir o schema em um banco descartável vazio, configure `DB_DATABASE` c
 
 - API no Render (plano gratuito) e MySQL gerenciado externo (TiDB Cloud), porque o Render gratuito não oferece MySQL. Imagens no Cloudinary.
 - O plano gratuito dorme após 15 min sem tráfego: aquecer a API antes da demonstração. A [#68](https://github.com/conloq/mash/issues/68) cria o `GET /health` para o Render saber se a API subiu.
+- URLs publicadas: [API](https://back-end-xxq5.onrender.com) · [frontend EJS](https://frontend-a6u4.onrender.com). A API responde em `/health`.
 
 ### Configurar o deploy no Render
 
