@@ -1,6 +1,8 @@
 // code-wiki:start
-// Summary: Compartilha a conexao Sequelize com atributos camelCase e colunas snake_case.
-// Description: Define underscored para todos os models; o schema fisico vem das migrations.
+// Summary: Compartilha a conexão Sequelize com atributos camelCase e colunas snake_case.
+// Description: A conexão MySQL reúne credenciais, host e porta do ambiente, com TLS opcional e fuso fixo do projeto.
+// A opção de definição ativa o underscored, que faz o atributo camelCase do model virar coluna snake_case na tabela.
+// As migrations são a origem do schema; este módulo não sincroniza nem altera tabela alguma.
 // code-wiki:end
 import { Sequelize } from 'sequelize';
 

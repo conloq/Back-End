@@ -1,4 +1,9 @@
-// code-wiki: Autentica credenciais com Argon2 e retorna JWT e perfil público camelCase.
+// code-wiki:start
+// Summary: Confere credenciais e devolve token assinado e perfil público.
+// Description: E-mail inexistente e senha que não confere resultam no mesmo erro de credencial inválida, sem distinguir os casos.
+// O token assinado dura um dia e leva a identidade e o e-mail.
+// A resposta traz o perfil com nome, e-mail e foto, sem a senha.
+// code-wiki:end
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';

@@ -1,6 +1,8 @@
 // code-wiki:start
-// Summary: Expoe receitas em ingles com parametro id.
-// Description: Protege criacao, lista, detalhe e operacoes existentes por JWT.
+// Summary: Expõe as receitas em inglês, com o identificador na URL nas operações de um item.
+// Description: Listagem e criação respondem pela coleção de receitas; detalhe, alteração e exclusão recebem o identificador na URL.
+// Todas exigem token válido, e nenhuma delas aceita o usuário pelo corpo da requisição.
+// As rotas seguem o padrão de nome em inglês minúsculo e plural do contrato do projeto.
 // code-wiki:end
 import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware.js';

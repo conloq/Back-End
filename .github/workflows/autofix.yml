@@ -1,3 +1,9 @@
+# code-wiki:start
+# Summary: Dispara o workflow compartilhado de formatação em pull requests e na main.
+# Description: O workflow reutiliza a definição da organização em conloq/.github, com o Prettier como formatador.
+# Mudanças só em workflows, no guia do agente ou no README não disparam a execução.
+# As permissões são somente de leitura, e a execução também acontece em push para a main.
+# code-wiki:end
 name: autofix.ci
 on:
   pull_request:

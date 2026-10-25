@@ -1,6 +1,8 @@
 // code-wiki:start
-// Summary: Persiste receitas com nomes normalizados por usuario.
-// Description: Compara nomes sem caixa ou espacos nas pontas, preservando os models do Joao.
+// Summary: Persiste receitas com nomes normalizados por usuário.
+// Description: Os nomes são comparados sem caixa e sem espaços nas pontas, para não repetir receita do mesmo usuário.
+// A lista sai por identificador crescente e o detalhe busca pela chave primária, sem filtro de dono.
+// A alteração recusa nome já usado pelo mesmo usuário e restringe a escrita ao par receita e usuário.
 // code-wiki:end
 import { Op, fn, col, where } from 'sequelize';
 import Recipe from '../models/recipeModel.js';

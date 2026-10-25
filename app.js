@@ -1,3 +1,11 @@
+// code-wiki:start
+// Summary: Monta a API REST do Mash: exige as variáveis de ambiente, testa o banco e publica os routers de usuário, receita, rampa e documentação.
+// Description: Antes de abrir a porta, o processo confere as variáveis de banco, de assinatura de token e de credenciais de nuvem; sem qualquer uma delas imprime a lista de ausentes e encerra.
+// O endpoint de saúde responde apenas com a mensagem de estado, sem tocar o banco, para distinguir indisponibilidade de rota ausente.
+// O CORS libera a origem do frontend para leitura, escrita e preflight, permitindo o cabeçalho de autorização.
+// Os quatro routers de domínio são montados na mesma aplicação, e as associações entre models são carregadas no arranque.
+// A porta vem do ambiente, e o console anuncia o endereço do servidor e o da documentação.
+// code-wiki:end
 import express from 'express';
 import 'dotenv/config';
 

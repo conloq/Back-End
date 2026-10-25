@@ -1,3 +1,9 @@
+// code-wiki:start
+// Summary: Cria a tabela de contas com identidade, contato, credencial e foto.
+// Description: A identidade é autoincrementada, o e-mail é único e nome e senha são obrigatórios.
+// Telefone e foto são opcionais, e as marcas de tempo nascem com o padrão do banco.
+// A reversão derruba a tabela inteira.
+// code-wiki:end
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */

@@ -1,3 +1,8 @@
+// code-wiki:start
+// Summary: Gera o hash de senha com Argon2id e custo de memória alto.
+// Description: O hash usa Argon2id com 64 MiB de memória, três passes e paralelismo de grau um.
+// Falha na geração é registrada e convertida em erro sentinela, para o controller responder sem expor o erro interno.
+// code-wiki:end
 import argon2 from 'argon2';
 
 const argon2IdConfig = {
