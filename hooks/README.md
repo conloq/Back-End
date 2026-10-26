@@ -12,10 +12,12 @@ Hooks and the OpenCode plugin are integration mechanisms, not a second reasoning
 ## Hooks
 
 ### structural-change-impact
+
 Despite the historical name, v0.2 does **not** classify low/medium/high risk.
 It collects the current Git change set and emits evidence for semantic impact analysis by the model.
 
 ### delivery-gate-guard
+
 Maintains the objective fingerprint of the state approved by `delivery-quality-gate`.
 If the working state changes, the previous approval is invalid.
 

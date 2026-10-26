@@ -7,6 +7,7 @@ This hook keeps only an objective delivery invariant:
 It does not decide whether the implementation is correct. That belongs to the model + skill.
 
 Commands:
+
 - `approve`: store the fingerprint after the skill explicitly passes the gate.
 - `check`: compare current state with the approved state.
 - `status`: inspect both states.

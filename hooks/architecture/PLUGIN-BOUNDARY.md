@@ -5,6 +5,7 @@
 `project-workflow` is primarily an integration/orchestration plugin.
 
 ### Plugin may
+
 - subscribe to OpenCode V2 events;
 - collect Git/diff/state evidence;
 - invoke hook collectors/guards;
@@ -13,6 +14,7 @@
 - route the agent toward the relevant skill.
 
 ### Plugin must not
+
 - classify semantic impact as low/medium/high;
 - decide which project components must change;
 - interpret acceptance criteria;
