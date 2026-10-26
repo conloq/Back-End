@@ -1,6 +1,10 @@
 // code-wiki:start
-// Summary: Valida e atende cadastro, consulta, atualizacao e foto do usuario autenticado.
-// Description: O perfil recebe phone em camelCase, igual ao model e ao contrato publico.
+// Summary: Valida cadastro, consulta, alteração, exclusão e foto do usuário autenticado.
+// Description: O cadastro normaliza nome e e-mail, recusa e-mail malformado e senha com espaços, e grava a senha como hash.
+// E-mail já existente responde 409 e perfil inexistente responde 404; o resto vira 500.
+// A alteração repete as mesmas validações do cadastro e só troca a senha quando uma nova senha vem no corpo.
+// A foto é enviada em fluxo para a nuvem, e o endereço devolvido é gravado no perfil antes da resposta.
+// O telefone é aceito e devolvido em camelCase, igual ao model e ao contrato público.
 // code-wiki:end
 import userService from '../services/userService.js';
 import { createHash } from '../services/argon2.js';

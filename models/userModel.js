@@ -1,3 +1,9 @@
+// code-wiki:start
+// Summary: Descreve a tabela de contas: identidade, contato, credencial e foto de perfil.
+// Description: A identidade é um inteiro autoincrementado; nome, e-mail e senha são obrigatórios e o e-mail é único.
+// Telefone e foto são opcionais, e as marcas de criação e atualização ficam sob controle do model.
+// O nome físico da tabela é fixado aqui, para casar com a migration que a cria.
+// code-wiki:end
 import { DataTypes } from 'sequelize';
 import Connection from '../config/sequelize-config.js';
 

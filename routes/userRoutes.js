@@ -1,4 +1,9 @@
-// code-wiki: Expõe cadastro, login e operações do perfil autenticado.
+// code-wiki:start
+// Summary: Publica cadastro, login e as operações do perfil autenticado, com limite para envio de foto.
+// Description: Cadastro e login são as duas rotas abertas; consulta, alteração e exclusão do perfil exigem token válido.
+// O envio de foto passa por dois limites: um por entrada e outro por conta autenticada, para não penalizar rede compartilhada.
+// A verificação do token roda antes do processamento do multipart, e o limite por entrada responde com mensagem em português.
+// code-wiki:end
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import {

@@ -1,6 +1,10 @@
 // code-wiki:start
 // Summary: Valida receitas e responde com os envelopes do contrato.
-// Description: Usa identidade JWT, IDs positivos e o mesmo 404 para recurso ausente ou alheio.
+// Description: O identificador da URL precisa ser inteiro positivo, e o nome não pode ser vazio nem passar de 255 caracteres.
+// Recurso ausente e recurso de outro usuário respondem o mesmo 404, sem revelar a existência do dado alheio.
+// A criação devolve a receita gravada; a alteração devolve só a mensagem de sucesso.
+// A exclusão responde 204 sem corpo, e o 409 de receita com lote vinculado depende do model de lote, que ainda não existe.
+// Nome repetido do mesmo usuário responde 409, e qualquer outra falha vira 500.
 // code-wiki:end
 import RecipeUser from '../services/recipeService.js';
 export const validId = (value) =>

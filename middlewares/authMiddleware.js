@@ -1,3 +1,9 @@
+// code-wiki:start
+// Summary: Exige token Bearer válido e coloca o identificador do usuário na requisição.
+// Description: Cabeçalho ausente ou formato diferente de Bearer responde 401 com mensagem em português.
+// Token inválido ou expirado também responde 401, e só a assinatura passa adiante, com o identificador do usuário disponível para os controllers.
+// A chave de assinatura vem do ambiente, nunca do corpo da requisição.
+// code-wiki:end
 import jwt from 'jsonwebtoken';
 
 const authMiddleware = (req, res, next) => {

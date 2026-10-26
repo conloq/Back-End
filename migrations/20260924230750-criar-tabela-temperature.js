@@ -1,3 +1,9 @@
+// code-wiki:start
+// Summary: Cria a tabela de rampas com limites, horários de mosturação e vínculo com a receita.
+// Description: São gravados o mínimo e o máximo da rampa, o mínimo e o máximo do limite e três horários, todos obrigatórios.
+// A ordem da rampa é opcional, e a receita é obrigatória com propagação em cascata na exclusão e na alteração.
+// A reversão derruba a tabela.
+// code-wiki:end
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */

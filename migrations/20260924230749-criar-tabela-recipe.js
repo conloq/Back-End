@@ -1,3 +1,9 @@
+// code-wiki:start
+// Summary: Cria a tabela de receitas com vínculo obrigatório e propagação em cascata.
+// Description: A identidade é autoincrementada e o nome é obrigatório.
+// O usuário é obrigatório, e a exclusão ou a alteração do usuário propaga para as receitas.
+// As marcas de tempo nascem com o padrão do banco, e a reversão derruba a tabela.
+// code-wiki:end
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */

@@ -1,3 +1,9 @@
+// code-wiki:start
+// Summary: Atende o login: valida o corpo, chama o serviço de credenciais e traduz a falha em status HTTP.
+// Description: E-mail ou senha ausentes respondem 400 antes de qualquer consulta ao banco.
+// Credencial inválida responde 401 e qualquer outra falha responde 500, sempre com a chave de erro em português.
+// Na resposta de sucesso vêm o token e o perfil, no envelope definido pelo contrato.
+// code-wiki:end
 import AuthService from '../services/authService.js';
 
 const login = async (req, res) => {

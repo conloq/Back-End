@@ -1,3 +1,9 @@
+# code-wiki:start
+# Summary: Configura a revisão automática de código em português, focada em contrato e segurança.
+# Description: O idioma e as instruções pedem objetividade técnica, com atenção ao tratamento de erros e ao contrato da issue, sem exigir teste automatizado.
+# A revisão automática de pull request fica desligada, assim como o autofix, a correção de CI e a geração de docstring.
+# Os sugestões automáticos ficam desligados, e o branch de base é a main.
+# code-wiki:end
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 language: 'pt-BR'
 tone_instructions: 'Seja objetivo e técnico. Foque em segurança, tratamento de erros e no contrato da issue (códigos HTTP, message/error, JSON em camelCase). Não peça testes automatizados.'

@@ -1,4 +1,9 @@
-// code-wiki: Recebe foto JPEG/PNG em memória e traduz erros do multipart para JSON.
+// code-wiki:start
+// Summary: Recebe a foto do perfil em memória e traduz falha de multipart em resposta JSON.
+// Description: A imagem é aceita apenas como JPEG ou PNG e fica em memória, com limite de dez megabytes.
+// Arquivo grande demais responde 413, tipo não suportado responde 415, multipart malformado responde 400 e o resto vira 500.
+// O nome do campo aceito no formulário é único, de modo que o resto do corpo multipart é ignorado.
+// code-wiki:end
 import multer from 'multer';
 
 const upload = multer({

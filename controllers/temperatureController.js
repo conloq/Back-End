@@ -1,6 +1,9 @@
 // code-wiki:start
-// Summary: Cria e lista rampas da receita autenticada.
-// Description: Valida campos camelCase, temperaturas de 0 a 100 e horarios HH:MM:SS.
+// Summary: Cria e lista as rampas de temperatura da receita do usuário autenticado.
+// Description: As temperaturas precisam ser inteiras de zero a cem graus, e a mínima não pode superar a máxima.
+// Os horários seguem o formato de horas, minutos e segundos, e a ordem da rampa, quando vem, precisa caber em inteiro de 32 bits.
+// A receita tem de existir e pertencer ao usuário; caso contrário a resposta é 404.
+// A criação devolve a rampa gravada e a listagem devolve as rampas da receita.
 // code-wiki:end
 import TemperatureRecipe from '../services/temperatureService.js';
 import RecipeUser from '../services/recipeService.js';
