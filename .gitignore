@@ -1,2 +1,4 @@
 node_modules
 .env
+# ---- Estado local do delivery gate (plugin/hooks project-workflow) ----
+.agent-state/

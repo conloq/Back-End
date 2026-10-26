@@ -1,0 +1,13 @@
+{
+  "name": "project-workflow-opencode-v2",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "dependencies": { "@opencode/plugin": "latest" },
+  "devDependencies": { "typescript": "^5.9.0" },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test:guard": "python scripts/delivery_gate_guard.py selftest"
+  }
+}
