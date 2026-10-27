@@ -63,7 +63,7 @@ Nunca versione o `.env` nem preencha segredos no arquivo de exemplo.
 - Colunas em português mudam de nome: `nome` → `name`, `fone` → `phone`.
 - A regra de 13/10 (banco em camelCase) foi revertida em 15/10; a de 28/09 (snake_case também no JSON) continua substituída.
 
-A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues de [`conloq/mash`](https://github.com/conloq/mash/issues/66): 14 rotas em 6 grupos, uma issue por grupo de rotas.
+A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues de [`conloq/mash`](https://github.com/conloq/mash/issues/66): 14 rotas em 3 grupos: 5 de receitas, 4 de rampas de temperatura e 5 de lotes. Rotas de conta não entram nessa contagem.
 
 ## Banco e migrations (decisão de 12/10/2026)
 
@@ -116,7 +116,7 @@ Use o rollback do Render para voltar ao deploy anterior da aplicação. Isso nã
 - **Proteções e automação:** CodeRabbit pode comentar e CodeQL pode reportar achados. Essas ferramentas, por si só, não definem um gate de merge. Consulte ao vivo as branch protections, rulesets, checks obrigatórios, resolução de conversas e permissões antes de afirmar se o merge está liberado.
 - Conventional Commits em pt-BR: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`. Branch `<tipo>/<número da issue>-<descrição-curta>`; o Pull Request fecha a issue com `Closes conloq/mash#NN`.
 - Cada rota entregue é documentada em `config/swagger.json` no mesmo Pull Request e tem a validação manual registrada na [#41](https://github.com/conloq/mash/issues/41).
-- Épicos do depósito em `conloq/mash`: [#30](https://github.com/conloq/mash/issues/30) (base da API: padrões, schema e evidências), [#83](https://github.com/conloq/mash/issues/83) (conta e segurança), [#80](https://github.com/conloq/mash/issues/80) (receitas e rampas), [#81](https://github.com/conloq/mash/issues/81) (lotes) e [#82](https://github.com/conloq/mash/issues/82) (teste de iodo: envio, consulta e histórico). A análise por visão computacional (OpenCV, [#34](https://github.com/conloq/mash/issues/34)) fica para o próximo semestre.
+- Épicos em `conloq/mash`: [#30](https://github.com/conloq/mash/issues/30) (base da API: padrões, schema e evidências), [#83](https://github.com/conloq/mash/issues/83) (conta e segurança), [#80](https://github.com/conloq/mash/issues/80) (receitas e rampas), [#81](https://github.com/conloq/mash/issues/81) (lotes) e [#82](https://github.com/conloq/mash/issues/82) (teste de iodo). O recorte vigente do semestre está na [#66](https://github.com/conloq/mash/issues/66).
 
 ## Estrutura
 
