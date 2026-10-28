@@ -26,7 +26,7 @@ Read the portable [Conloq/Mash context index](https://github.com/conloq/.github/
 
 ## Cross-repo boundaries
 
-- `frontend` uses EJS and a server-side page controller to call this API with a Bearer token. It connects to the shared MySQL database only for its technical `sessions` table; Back-End still owns domain data, API rules, and executable schema migrations.
+- `frontend` is a Next.js (React) app that calls this API from the browser with a Bearer token, so CORS must allow its origin (`FRONTEND_URL`). It does not connect to MySQL; the old `sessions` table was dropped by migration `20261028120000-remover-tabela-sessions`. Back-End owns domain data, API rules, and executable schema migrations.
 - Sequelize uses MySQL. The executable schema source is this repository's migrations, not SQL snapshots or diagrams in `conloq/database`.
 - Cloudinary is used for user profile-image uploads. This does not mean iodine images are uploaded or analyzed by the current iodine flow.
 - Iodine testing this semester is a frontend simulation. Real image upload/storage, OpenCV analysis, and real query/history are planned for a future semester; confirm code at the target SHA before asserting a feature exists.
