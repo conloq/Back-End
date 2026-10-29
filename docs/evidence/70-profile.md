@@ -16,22 +16,7 @@ O Swagger documenta as cinco operações de perfil; login permanece descrito
 na mesma especificação e tem sua correção no PR da #38. O campo phone do
 controller está exclusivamente no PR da #71, sem duplicar aquela mudança.
 
-## Reprodução
-
-Use banco MySQL local descartável, migrations dessa branch e variáveis de
-ambiente de teste. Não carregue .env real. Para substituir explicitamente
-apenas o provedor externo:
-
-```sh
-NODE_ENV=test CLOUD_NAME=test-only \
-NODE_OPTIONS='--import=./scripts/cloudinary-test-double.mjs' node app.js
-# Em outro terminal:
-PROFILE_TEST_BASE=http://127.0.0.1:8080 node scripts/verify-profile.mjs
-```
-
-Forneça também DB_* e demais variáveis obrigatórias com valores de teste.
-O duplo recusa ambiente diferente de test/test-only; não entra no boot normal.
-O teste cria duas contas próprias e as remove no final.
+## Validação
 
 Node 24.22.0 e MySQL 8.4.9: 12 verificações falhavam antes; as 16 passaram
 após a correção. Inclui próprio e-mail, conflito 409, dados inválidos 400,

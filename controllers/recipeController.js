@@ -7,72 +7,127 @@
 // Nome repetido do mesmo usuário responde 409, e qualquer outra falha vira 500.
 // code-wiki:end
 import RecipeUser from '../services/recipeService.js';
-export const validId = (value) =>
-  typeof value === 'string' && /^[1-9][0-9]*$/.test(value) && Number.isSafeInteger(Number(value));
-const validName = (value) =>
-  typeof value === 'string' && value.trim().length > 0 && value.trim().length <= 255;
-const failure = (res, error) =>
-  error.message === 'RECIPE_EXISTS'
-    ? res.status(409).json({ error: 'Receita já existe' })
-    : res.status(500).json({ error: 'Erro interno do servidor' });
+
 const showRecipe = async (req, res) => {
   try {
-    return res.status(200).json({ recipes: await RecipeUser.showRecipes(req.userId) });
+    const userId = req.userId;
+
+    const recipes = await RecipeUser.showRecipes(userId);
+
+    return res.status(200).json({ recipes });
   } catch (error) {
-    return failure(res, error);
+    console.log(error);
+    return res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };
+
 const showOneRecipe = async (req, res) => {
-  if (!validId(req.params.id)) return res.status(400).json({ error: 'ID inválido' });
   try {
-    const recipe = await RecipeUser.showOneRecipe(req.params.id);
-    if (!recipe || recipe.userId !== req.userId)
-      return res.status(404).json({ error: 'Receita não encontrada' });
+    const userId = req.userId;
+    const recipeId = req.params.id;
+
+    // ID tem que ser inteiro positivo, ex: "12"
+    if (!/^[1-9][0-9]*$/.test(recipeId) || !Number.isSafeInteger(Number(recipeId)))
+      return res.status(400).json({ error: 'ID inválido' });
+
+    const recipe = await RecipeUser.showOneRecipe(recipeId);
+
+    // Receita de outro usuário responde igual a inexistente, para não revelar que ela existe
+    if (!recipe) return res.status(404).json({ error: 'Receita não encontrada' });
+
+    console.log(recipe);
+
+    if (recipe.userId !== userId) return res.status(404).json({ error: 'Receita não encontrada' });
+
     return res.status(200).json({ recipe });
   } catch (error) {
-    return failure(res, error);
+    return res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };
+
 const createRecipe = async (req, res) => {
-  if (!validName(req.body?.name))
-    return res.status(400).json({
-      error:
-        typeof req.body?.name === 'string' && req.body.name.trim().length > 255
-          ? 'Nome não pode exceder 255 caracteres'
-          : 'Nome não pode estar vazio',
-    });
   try {
-    const recipe = await RecipeUser.createRecipe(req.body.name.trim(), req.userId);
+    const userId = req.userId;
+    const nameRecipe = req.body?.name;
+
+    if (typeof nameRecipe !== 'string' || !nameRecipe.trim())
+      return res.status(400).json({ error: 'Nome não pode estar vazio' });
+
+    const cleanName = nameRecipe.trim();
+
+    if (cleanName.length > 255)
+      return res.status(400).json({ error: 'Nome não pode exceder 255 caracteres' });
+
+    const existsRecipe = await RecipeUser.showRecipeByName(cleanName, userId);
+    console.log(existsRecipe);
+
+    if (existsRecipe) return res.status(409).json({ error: 'Receita já existe' });
+
+    const recipe = await RecipeUser.createRecipe(cleanName, userId);
+
     return res.status(201).json({ message: 'Receita criada com sucesso', recipe });
   } catch (error) {
-    return failure(res, error);
+    console.log(error);
+    return res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };
+
 // O 409 "Receita possui lotes vinculados" depende do model de lote (#31).
 const deleteRecipe = async (req, res) => {
-  if (!validId(req.params.id)) return res.status(400).json({ error: 'ID inválido' });
   try {
-    const recipe = await RecipeUser.showOneRecipe(req.params.id);
-    if (!recipe || recipe.userId !== req.userId)
-      return res.status(404).json({ error: 'Receita não encontrada' });
-    await RecipeUser.deleteRecipe(req.params.id);
+    const userId = req.userId;
+    const recipeId = req.params.id;
+
+    if (!/^[1-9][0-9]*$/.test(recipeId) || !Number.isSafeInteger(Number(recipeId)))
+      return res.status(400).json({ error: 'ID inválido' });
+
+    const recipe = await RecipeUser.showOneRecipe(recipeId);
+
+    if (!recipe) return res.status(404).json({ error: 'Receita não encontrada' });
+
+    console.log(recipe);
+
+    if (recipe.userId !== userId) return res.status(404).json({ error: 'Receita não encontrada' });
+
+    await RecipeUser.deleteRecipe(recipeId);
+
     return res.sendStatus(204);
   } catch (error) {
-    return failure(res, error);
+    return res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };
+
 const updateRecipe = async (req, res) => {
-  if (!validId(req.params.id)) return res.status(400).json({ error: 'ID inválido' });
-  if (!validName(req.body?.name))
-    return res.status(400).json({ error: 'Nome não pode estar vazio ou exceder 255 caracteres' });
   try {
-    const recipe = await RecipeUser.showOneRecipe(req.params.id);
-    if (!recipe || recipe.userId !== req.userId)
-      return res.status(404).json({ error: 'Receita não encontrada' });
-    await RecipeUser.updateRecipe(req.params.id, req.body.name.trim(), req.userId);
+    const userId = req.userId;
+    const recipeId = req.params.id;
+    const nameRecipe = req.body?.name;
+
+    if (!/^[1-9][0-9]*$/.test(recipeId) || !Number.isSafeInteger(Number(recipeId)))
+      return res.status(400).json({ error: 'ID inválido' });
+
+    if (typeof nameRecipe !== 'string' || !nameRecipe.trim() || nameRecipe.trim().length > 255)
+      return res.status(400).json({ error: 'Nome não pode estar vazio ou exceder 255 caracteres' });
+
+    const cleanName = nameRecipe.trim();
+
+    const recipe = await RecipeUser.showOneRecipe(recipeId);
+
+    if (!recipe) return res.status(404).json({ error: 'Receita não encontrada' });
+
+    if (recipe.userId !== userId) return res.status(404).json({ error: 'Receita não encontrada' });
+
+    // Procura outra receita do usuário com o mesmo nome, ignorando a própria
+    const existsRecipe = await RecipeUser.showRecipeByName(cleanName, userId, recipeId);
+
+    if (existsRecipe) return res.status(409).json({ error: 'Receita já existe' });
+
+    await RecipeUser.updateRecipe(recipeId, cleanName, userId);
+
     return res.status(200).json({ message: 'Receita atualizada com sucesso' });
   } catch (error) {
-    return failure(res, error);
+    return res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };
+
 export { showRecipe, createRecipe, deleteRecipe, updateRecipe, showOneRecipe };

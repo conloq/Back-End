@@ -6,8 +6,6 @@ O boot já validava as variáveis obrigatórias. O delta corrigido foi retirar
 qualquer valor de JWT do exemplo, completar os nomes previstos na Issue e
 orientar a cópia do exemplo no README. Nenhum `.env` real foi lido.
 
-Reprodução: `node scripts/verify-env.mjs` (Node 24.22.0, dependências do lock).
-
 - PASS: `JWT_SECRET_KEY=` no exemplo.
 - PASS: boot sem JWT termina com código 1, cita o nome e não imprime valores.
 - PASS: boot sem todas as variáveis obrigatórias termina com código 1.

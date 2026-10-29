@@ -5,18 +5,43 @@
 // A listagem devolve todas as rampas da receita, sem paginação.
 // code-wiki:end
 import Temperature from '../models/temperatureModel.js';
+
 class TemperatureRecipe {
-  async createTemperature(values) {
-    return Temperature.create(values);
+  async createTemperature(
+    maxTemperatureRamp,
+    minTemperatureRamp,
+    maxTemperatureLimit,
+    minTemperatureLimit,
+    timer,
+    initialization,
+    idealTime,
+    orderRamp,
+    recipeId,
+  ) {
+    const temperature = await Temperature.create({
+      maxTemperatureRamp,
+      minTemperatureRamp,
+      maxTemperatureLimit,
+      minTemperatureLimit,
+      timer,
+      initialization,
+      idealTime,
+      orderRamp,
+      recipeId,
+    });
+    return temperature;
   }
+
   async showTemperature(recipeId) {
-    return Temperature.findAll({
-      where: { recipeId },
+    const temperatures = await Temperature.findAll({
+      where: { recipeId: recipeId },
       order: [
         ['orderRamp', 'ASC'],
         ['id', 'ASC'],
       ],
     });
+    return temperatures;
   }
 }
+
 export default new TemperatureRecipe();

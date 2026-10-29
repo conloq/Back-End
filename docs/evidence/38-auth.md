@@ -13,20 +13,7 @@ Swagger; resposta 404 idêntica para receita inexistente ou pertencente a
 outro usuário nas operações já disponíveis, incluindo acesso às rampas.
 Isso evita revelar a existência de recursos alheios.
 
-## Reprodução
-
-Use exclusivamente uma API local descartável em `127.0.0.1:8080`, com
-MySQL vazio e credenciais de teste. Execute as migrations dessa branch e
-inicie `node app.js`; forneça as variáveis obrigatórias por ambiente.
-Depois execute:
-
-```sh
-AUTH_TEST_BASE=http://127.0.0.1:8080 node scripts/verify-auth.mjs
-```
-
-O script cria duas contas temporárias, faz requisições HTTP reais, verifica
-login/perfil/isolamento e remove as próprias contas. Nunca use uma API
-com dados de trabalho. O Swagger é validado diretamente do JSON versionado.
+## Validação
 
 Node 24.22.0, MySQL 8.4.9, dependências do lock: antes da correção,
 8 verificações falharam; depois, 14 verificações passaram. Os cenários
