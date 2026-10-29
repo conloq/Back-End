@@ -7,62 +7,103 @@
 // code-wiki:end
 import TemperatureRecipe from '../services/temperatureService.js';
 import RecipeUser from '../services/recipeService.js';
-import { validId } from './recipeController.js';
-const temperatures = [
-  'maxTemperatureRamp',
-  'minTemperatureRamp',
-  'maxTemperatureLimit',
-  'minTemperatureLimit',
-];
-const times = ['timer', 'initialization', 'idealTime'];
-const timePattern = /^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+
 const createTemperature = async (req, res) => {
-  if (!validId(req.params.id)) return res.status(400).json({ error: 'ID inválido' });
   try {
-    const recipe = await RecipeUser.showOneRecipe(req.params.id);
-    if (!recipe || recipe.userId !== req.userId)
-      return res.status(404).json({ error: 'Receita não encontrada' });
-    const body = req.body ?? {};
-    if (
-      temperatures.some((key) => !Number.isInteger(body[key]) || body[key] < 0 || body[key] > 100)
-    )
-      return res.status(400).json({ error: 'Temperaturas devem ser inteiras entre 0 e 100 °C' });
-    if (
-      body.minTemperatureRamp > body.maxTemperatureRamp ||
-      body.minTemperatureLimit > body.maxTemperatureLimit
-    )
+    const userId = req.userId;
+    const recipeId = req.params.id;
+
+    if (!/^[1-9][0-9]*$/.test(recipeId) || !Number.isSafeInteger(Number(recipeId)))
+      return res.status(400).json({ error: 'ID inválido' });
+
+    const recipe = await RecipeUser.showOneRecipe(recipeId);
+
+    if (!recipe) return res.status(404).json({ error: 'Receita não encontrada' });
+
+    if (recipe.userId !== userId) return res.status(404).json({ error: 'Receita não encontrada' });
+
+    const {
+      maxTemperatureRamp,
+      minTemperatureRamp,
+      maxTemperatureLimit,
+      minTemperatureLimit,
+      timer,
+      initialization,
+      idealTime,
+      orderRamp,
+    } = req.body ?? {};
+
+    const temperaturas = [
+      maxTemperatureRamp,
+      minTemperatureRamp,
+      maxTemperatureLimit,
+      minTemperatureLimit,
+    ];
+
+    for (const temperatura of temperaturas) {
+      if (!Number.isInteger(temperatura) || temperatura < 0 || temperatura > 100)
+        return res.status(400).json({ error: 'Temperaturas devem ser inteiras entre 0 e 100 °C' });
+    }
+
+    if (minTemperatureRamp > maxTemperatureRamp || minTemperatureLimit > maxTemperatureLimit)
       return res.status(400).json({ error: 'Temperatura mínima não pode superar a máxima' });
-    if (times.some((key) => typeof body[key] !== 'string' || !timePattern.test(body[key])))
-      return res.status(400).json({ error: 'Horários devem seguir HH:MM:SS' });
-    if (
-      body.orderRamp !== undefined &&
-      (!Number.isInteger(body.orderRamp) ||
-        body.orderRamp < -2147483648 ||
-        body.orderRamp > 2147483647)
-    )
-      return res.status(400).json({ error: 'Ordem da rampa deve ser um inteiro válido' });
-    const values = Object.fromEntries([...temperatures, ...times].map((key) => [key, body[key]]));
-    if (body.orderRamp !== undefined) values.orderRamp = body.orderRamp;
-    const temperature = await TemperatureRecipe.createTemperature({
-      ...values,
-      recipeId: recipe.id,
-    });
+
+    // Horário no formato HH:MM:SS, ex: "01:30:00"
+    const horarios = [timer, initialization, idealTime];
+
+    for (const horario of horarios) {
+      if (
+        typeof horario !== 'string' ||
+        !/^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/.test(horario)
+      )
+        return res.status(400).json({ error: 'Horários devem seguir HH:MM:SS' });
+    }
+
+    // orderRamp é opcional; se vier, tem que caber no INT do MySQL
+    if (orderRamp !== undefined) {
+      if (!Number.isInteger(orderRamp) || orderRamp < -2147483648 || orderRamp > 2147483647)
+        return res.status(400).json({ error: 'Ordem da rampa deve ser um inteiro válido' });
+    }
+
+    const temperature = await TemperatureRecipe.createTemperature(
+      maxTemperatureRamp,
+      minTemperatureRamp,
+      maxTemperatureLimit,
+      minTemperatureLimit,
+      timer,
+      initialization,
+      idealTime,
+      orderRamp,
+      recipe.id,
+    );
+
     return res.status(201).json({ message: 'Temperatura criada com sucesso', temperature });
-  } catch {
+  } catch (error) {
+    console.error(error.message);
     return res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };
+
 const showTemperature = async (req, res) => {
-  if (!validId(req.params.id)) return res.status(400).json({ error: 'ID inválido' });
   try {
-    const recipe = await RecipeUser.showOneRecipe(req.params.id);
-    if (!recipe || recipe.userId !== req.userId)
-      return res.status(404).json({ error: 'Receita não encontrada' });
-    return res
-      .status(200)
-      .json({ temperatures: await TemperatureRecipe.showTemperature(recipe.id) });
-  } catch {
+    const userId = req.userId;
+    const recipeId = req.params.id;
+
+    if (!/^[1-9][0-9]*$/.test(recipeId) || !Number.isSafeInteger(Number(recipeId)))
+      return res.status(400).json({ error: 'ID inválido' });
+
+    const recipe = await RecipeUser.showOneRecipe(recipeId);
+
+    if (!recipe) return res.status(404).json({ error: 'Receita não encontrada' });
+
+    if (recipe.userId !== userId) return res.status(404).json({ error: 'Receita não encontrada' });
+
+    const temperatures = await TemperatureRecipe.showTemperature(recipe.id);
+
+    return res.status(200).json({ temperatures: temperatures });
+  } catch (error) {
     return res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };
+
 export { createTemperature, showTemperature };
