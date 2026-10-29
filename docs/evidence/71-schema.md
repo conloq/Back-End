@@ -19,7 +19,7 @@ Classificação: **IMPLEMENTATION BUG**. A decisão permanece JSON/models camelC
 | Frontend de perfil                                      | NOT DONE | PR separado no conloq/frontend, também vinculado à #71            |
 | Revisão, merge e revalidação da main                    | NOT DONE | Aguardam o fluxo do PR; a issue não está Done                     |
 
-A reprodução inicial aplicou as três migrations sem erro, mas `information_schema.COLUMNS` mostrou `urlImage`, `createdAt` e `updatedAt` em `users`. `scripts/verify-schema.mjs` falhou na comparação com `url_image`, `created_at` e `updated_at`.
+A reprodução inicial aplicou as três migrations sem erro, mas `information_schema.COLUMNS` mostrou `urlImage`, `createdAt` e `updatedAt` em `users`.
 
 ## Ambiente isolado
 
@@ -29,15 +29,7 @@ A reprodução inicial aplicou as três migrations sem erro, mas `information_sc
 - Bancos novos separados para a reprodução anterior, a correção em production e a correção em development.
 - Variáveis e credenciais sintéticas de teste; nenhum segredo de ambiente real foi lido ou incluído.
 
-## Reprodução da validação
-
-Crie um banco vazio exclusivo, por exemplo `mash_71_test_schema_01`, e configure `DB_HOST`, `DB_USERNAME`, `DB_PASSWORD` e `DB_DATABASE` para esse banco. O script recusa nomes sem o prefixo de teste e schemas não vazios.
-
-```bash
-NODE_ENV=production node scripts/verify-schema.mjs
-# Em outro banco vazio exclusivo:
-NODE_ENV=development node scripts/verify-schema.mjs
-```
+## Validação
 
 Resultados obtidos nos dois ambientes:
 
@@ -51,14 +43,6 @@ Resultados obtidos nos dois ambientes:
 - Rollback completo e reaplicação passaram somente no banco descartável criado para a conferência. Não executar rollback no banco publicado.
 
 ## Bootstrap e HTTP
-
-Depois das migrations, configure as variáveis obrigatórias com dados de teste e execute:
-
-```bash
-NODE_OPTIONS="--import=./scripts/forbid-runtime-sync.mjs" npm start
-```
-
-O preload faz o processo falhar se `Connection.sync()` ou `Model.sync()` forem chamados pelo bootstrap da API. Ele não interfere no sequelize-cli do prestart.
 
 Resultados observados com NODE_ENV=production:
 

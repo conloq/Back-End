@@ -86,8 +86,6 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 
 Os ambientes `development` e `production` usam as variáveis `DB_*`. Banco que já recebeu migrations exige uma nova migration para mudar seu schema; as três iniciais foram reconciliadas antes do primeiro deploy, conforme a #71.
 
-Para conferir o schema em um banco descartável vazio, configure `DB_DATABASE` com o prefixo `mash_71_test_` e execute `node scripts/verify-schema.mjs`. O verificador aplica migrations e testa colunas, FKs, timestamps, cascatas, JSON camelCase e reaplicação sem mudanças; recusa banco não vazio e não apaga schemas. A evidência da #71 está em `docs/evidence/71-schema.md`.
-
 `FRONTEND_URL` define a origem liberada no CORS (padrão `http://localhost:4000`). O frontend chama a API direto do navegador, então em produção ela precisa ser a URL publicada do frontend.
 
 ## Deploy (decisão de 13/10/2026, [#61](https://github.com/conloq/mash/issues/61))
