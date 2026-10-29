@@ -12,8 +12,11 @@ API REST do Mash (migração do app monolítico [`conloq/mash`](https://github.c
 
 ## Como rodar
 
+Requer Node.js 18 ou superior (testado no 24) e MySQL.
+
 ```bash
 npm install
+cp .env.example .env # preencha as variáveis obrigatórias (ver abaixo)
 # o banco precisa existir antes: CREATE DATABASE mash;
 npm run db:migrate   # aplica as migrations pendentes
 npm start            # aplica migrations via prestart e inicia em PORT (local: 8080)
@@ -25,10 +28,12 @@ Render define `PORT`; localmente a API usa 8080 por padrão. O frontend local us
 
 ```
 DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_SSL, DB_SSL_CA, DB_DATABASE,
-JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY
+JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY,
+FRONTEND_URL
 ```
 
 Copie o `.env.example` para `.env` e preencha as variáveis do ambiente.
+A API não sobe sem `DB_HOST`, `DB_USERNAME`, `DB_DATABASE`, `JWT_SECRET_KEY`, `CLOUD_NAME`, `API_KEY_CLOUDINARY` e `API_SECRET_KEY_CLOUDINARY`: o boot lista as ausentes e encerra. As três do Cloudinary são exigidas mesmo para testar rotas que não enviam imagem. As demais têm padrão: `DB_PORT` 3306, `DB_PASSWORD` vazia, `DB_SSL` desligado e `FRONTEND_URL` `http://localhost:4000`.
 Nunca versione o `.env` nem preencha segredos no arquivo de exemplo.
 
 ## Padrão de resposta (decisão da equipe: base: aula-05 DW3)
