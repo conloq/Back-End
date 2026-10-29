@@ -24,10 +24,10 @@ const showRecipe = async (req, res) => {
 const showOneRecipe = async (req, res) => {
   try {
     const userId = req.userId;
-    const recipeId = req.params.id;
+    const recipeId = Number(req.params.id);
 
-    // ID tem que ser inteiro positivo, ex: "12"
-    if (!/^[1-9][0-9]*$/.test(recipeId) || !Number.isSafeInteger(Number(recipeId)))
+    // ID vem da URL; sem isso, "1abc" viraria 1 no MySQL
+    if (!Number.isSafeInteger(recipeId) || recipeId <= 0)
       return res.status(400).json({ error: 'ID inválido' });
 
     const recipe = await RecipeUser.showOneRecipe(recipeId);
@@ -76,9 +76,10 @@ const createRecipe = async (req, res) => {
 const deleteRecipe = async (req, res) => {
   try {
     const userId = req.userId;
-    const recipeId = req.params.id;
+    const recipeId = Number(req.params.id);
 
-    if (!/^[1-9][0-9]*$/.test(recipeId) || !Number.isSafeInteger(Number(recipeId)))
+    // ID vem da URL; sem isso, "1abc" viraria 1 no MySQL
+    if (!Number.isSafeInteger(recipeId) || recipeId <= 0)
       return res.status(400).json({ error: 'ID inválido' });
 
     const recipe = await RecipeUser.showOneRecipe(recipeId);
@@ -100,10 +101,11 @@ const deleteRecipe = async (req, res) => {
 const updateRecipe = async (req, res) => {
   try {
     const userId = req.userId;
-    const recipeId = req.params.id;
+    const recipeId = Number(req.params.id);
     const nameRecipe = req.body?.name;
 
-    if (!/^[1-9][0-9]*$/.test(recipeId) || !Number.isSafeInteger(Number(recipeId)))
+    // ID vem da URL; sem isso, "1abc" viraria 1 no MySQL
+    if (!Number.isSafeInteger(recipeId) || recipeId <= 0)
       return res.status(400).json({ error: 'ID inválido' });
 
     if (typeof nameRecipe !== 'string' || !nameRecipe.trim() || nameRecipe.trim().length > 255)

@@ -11,9 +11,10 @@ import RecipeUser from '../services/recipeService.js';
 const createTemperature = async (req, res) => {
   try {
     const userId = req.userId;
-    const recipeId = req.params.id;
+    const recipeId = Number(req.params.id);
 
-    if (!/^[1-9][0-9]*$/.test(recipeId) || !Number.isSafeInteger(Number(recipeId)))
+    // ID vem da URL; sem isso, "1abc" viraria 1 no MySQL
+    if (!Number.isSafeInteger(recipeId) || recipeId <= 0)
       return res.status(400).json({ error: 'ID inválido' });
 
     const recipe = await RecipeUser.showOneRecipe(recipeId);
@@ -87,9 +88,10 @@ const createTemperature = async (req, res) => {
 const showTemperature = async (req, res) => {
   try {
     const userId = req.userId;
-    const recipeId = req.params.id;
+    const recipeId = Number(req.params.id);
 
-    if (!/^[1-9][0-9]*$/.test(recipeId) || !Number.isSafeInteger(Number(recipeId)))
+    // ID vem da URL; sem isso, "1abc" viraria 1 no MySQL
+    if (!Number.isSafeInteger(recipeId) || recipeId <= 0)
       return res.status(400).json({ error: 'ID inválido' });
 
     const recipe = await RecipeUser.showOneRecipe(recipeId);
