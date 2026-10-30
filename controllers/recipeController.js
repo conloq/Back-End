@@ -3,10 +3,11 @@
 // Description: O identificador da URL precisa ser inteiro positivo, e o nome não pode ser vazio nem passar de 255 caracteres.
 // Recurso ausente e recurso de outro usuário respondem o mesmo 404, sem revelar a existência do dado alheio.
 // A criação devolve a receita gravada; a alteração devolve só a mensagem de sucesso.
-// A exclusão responde 204 sem corpo, e o 409 de receita com lote vinculado depende do model de lote, que ainda não existe.
+// A exclusão responde 204 sem corpo, ou 409 quando a receita tem lote vinculado.
 // Nome repetido do mesmo usuário responde 409, e qualquer outra falha vira 500.
 // code-wiki:end
 import RecipeUser from '../services/recipeService.js';
+import LotService from '../services/lotService.js';
 
 const showRecipe = async (req, res) => {
   try {
@@ -72,7 +73,6 @@ const createRecipe = async (req, res) => {
   }
 };
 
-// O 409 "Receita possui lotes vinculados" depende do model de lote (#31).
 const deleteRecipe = async (req, res) => {
   try {
     const userId = req.userId;
@@ -86,9 +86,10 @@ const deleteRecipe = async (req, res) => {
 
     if (!recipe) return res.status(404).json({ error: 'Receita não encontrada' });
 
-    console.log(recipe);
-
     if (recipe.userId !== userId) return res.status(404).json({ error: 'Receita não encontrada' });
+
+    if ((await LotService.countLotsByRecipe(recipeId)) > 0)
+      return res.status(409).json({ error: 'Receita possui lotes vinculados' });
 
     await RecipeUser.deleteRecipe(recipeId);
 

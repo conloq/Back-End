@@ -1,9 +1,9 @@
 // code-wiki:start
-// Summary: Monta a API REST do Mash: exige as variáveis de ambiente, testa o banco e publica os routers de usuário, receita, rampa e documentação.
+// Summary: Monta a API REST do Mash: exige as variáveis de ambiente, testa o banco e publica os routers de usuário, receita, rampa, lote e documentação.
 // Description: Antes de abrir a porta, o processo confere as variáveis de banco, de assinatura de token e de credenciais de nuvem; sem qualquer uma delas imprime a lista de ausentes e encerra.
 // O endpoint de saúde responde apenas com a mensagem de estado, sem tocar o banco, para distinguir indisponibilidade de rota ausente.
 // O CORS libera a origem do frontend para leitura, escrita e preflight, permitindo o cabeçalho de autorização.
-// Os quatro routers de domínio são montados na mesma aplicação, e as associações entre models são carregadas no arranque.
+// Os routers de domínio são montados na mesma aplicação, e as associações entre models são carregadas no arranque.
 // A porta vem do ambiente, e o console anuncia o endereço do servidor e o da documentação.
 // code-wiki:end
 import express from 'express';
@@ -28,6 +28,7 @@ import { authDB } from './config/data-base.js';
 import RouterUser from './routes/userRoutes.js';
 import RouterRecipe from './routes/recipeRoutes.js';
 import RouterTemperature from './routes/temperatureRoutes.js';
+import RouterLot from './routes/lotRoutes.js';
 import RouterSwagger from './routes/swaggerRoutes.js';
 import './config/associations.js';
 
@@ -55,6 +56,7 @@ app.use(RouterUser);
 app.use(RouterRecipe);
 app.use(RouterSwagger);
 app.use(RouterTemperature);
+app.use(RouterLot);
 
 const port = Number(process.env.PORT || 8080);
 app.listen(port, (e) => {
