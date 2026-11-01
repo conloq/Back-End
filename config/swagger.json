@@ -1284,7 +1284,8 @@
                           "orderRamp": {
                             "type": "integer",
                             "minimum": -2147483648,
-                            "maximum": 2147483647
+                            "maximum": 2147483647,
+                            "nullable": true
                           },
                           "id": {
                             "type": "integer"
@@ -1443,7 +1444,8 @@
                         "orderRamp": {
                           "type": "integer",
                           "minimum": -2147483648,
-                          "maximum": 2147483647
+                          "maximum": 2147483647,
+                          "nullable": true
                         },
                         "id": {
                           "type": "integer"
@@ -2272,7 +2274,7 @@
             }
           }
         ],
-        "description": "Quatro temperaturas inteiras entre 0 e 100 °C; mínimo não supera máximo em cada par. Horários HH:MM:SS. orderRamp opcional. Identidade obtida do JWT.",
+        "description": "Quatro temperaturas inteiras entre 0 e 100 °C; mínimo não supera máximo em cada par. Horários HH:MM:SS. orderRamp opcional; ausente, a ordem gravada é apagada (fica null). Identidade obtida do JWT.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2388,7 +2390,8 @@
                         "orderRamp": {
                           "type": "integer",
                           "minimum": -2147483648,
-                          "maximum": 2147483647
+                          "maximum": 2147483647,
+                          "nullable": true
                         },
                         "id": {
                           "type": "integer"
