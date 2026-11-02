@@ -36,7 +36,10 @@ class LoginHistoryService {
     return LoginHistory.findAll({
       where: { userId },
       attributes: ['id', 'ipAddress', 'location', 'status', 'loggedAt'],
-      order: [['loggedAt', 'DESC']],
+      order: [
+        ['loggedAt', 'DESC'],
+        ['id', 'DESC'],
+      ],
       limit: 20,
     });
   }
