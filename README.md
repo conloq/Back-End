@@ -62,7 +62,7 @@ Nunca versione o `.env` nem preencha segredos no arquivo de exemplo.
 - O **JSON** usa camelCase em inglês: `userId`, `recipeId`, `urlImage`, `mashStart`, `collectedAt`, `createdAt`. Vale no corpo da requisição, nos campos de formulário e na resposta.
 - O **banco** usa snake_case em inglês, nas tabelas e colunas: `user_id`, `recipe_id`, `url_image`, `mash_start`, `collected_at`, `created_at`, `updated_at`.
 - Os models declaram os atributos em camelCase e a conexão do Sequelize usa `define: { underscored: true }`, que mapeia as colunas em snake_case. As migrations declaram esses nomes físicos; não há código de tradução do JSON.
-- Tabelas em inglês, no plural: `users`, `recipes`, `temperatures`, `lots`, `analyses`.
+- Tabelas em inglês, no plural: `users`, `recipes`, `temperatures`, `lots`, `analyses`. Exceção: `login_history`, que segue o nome do schema de referência do `conloq/database`.
 - Rotas em inglês: coleção no plural (`/recipes`, `/lots`, `/analyses`), recurso único no singular (`/user`), `login` à parte; parâmetro de rota `:id`.
 - Colunas em português mudam de nome: `nome` → `name`, `fone` → `phone`.
 - A regra de 13/10 (banco em camelCase) foi revertida em 15/10; a de 28/09 (snake_case também no JSON) continua substituída.
@@ -74,6 +74,7 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 - O schema vem das **migrations do Sequelize**: toda tabela ou coluna nova entra por um arquivo em `migrations/`, aplicado com `npm run db:migrate` antes de `npm start` e a cada deploy.
 - O `prestart` executa `npm run db:migrate` antes de subir a API. O bootstrap não chama `Connection.sync()`; os models não criam nem alteram tabelas.
 - Migration já aplicada no banco publicado não se edita: cria-se uma nova.
+- `login_history` (migration `20261102120000-criar-tabela-login-history`) guarda um registro por login bem-sucedido: IP, localidade aproximada e se o IP já era conhecido pela conta. `POST /login` grava em segundo plano e `GET /user/login-history` devolve os 20 mais recentes. A localidade vem do ip-api.com (HTTP, plano gratuito); IP privado vira "Rede local" e falha vira "Desconhecida". No Render, o IP do cliente vem do header `CF-Connecting-IP`, que o Cloudflare sobrescreve; `req.ip` seria o do proxy. Ainda não há retenção: nada é apagado automaticamente.
 - A tabela `sessions` (sessão do antigo frontend EJS) foi removida pela migration `20261028120000-remover-tabela-sessions`: o frontend em React guarda o JWT no navegador e não conecta mais ao banco.
 - Comandos: `npx sequelize-cli db:migrate:status` mostra o que já rodou; `npm run db:migrate:undo` desfaz a última (nunca no banco publicado).
 
