@@ -2,13 +2,14 @@
 // Summary: Define as relações entre conta, receita, lote e rampa de temperatura.
 // Description: A conta tem muitas receitas e a receita pertence a uma conta, com a chave estrangeira de usuário declarada nos dois lados.
 // A receita tem muitas rampas e a rampa pertence a uma receita, com a chave estrangeira de receita nos dois lados.
-// Conta e receita têm muitos lotes, e o lote pertence às duas.
+// Conta e receita têm muitos lotes, e o lote pertence às duas. A conta tem muitas entradas no histórico de login.
 // O módulo só declara associações: é importado no arranque da aplicação e não abre conexão nem cria tabela.
 // code-wiki:end
 import Recipe from '../models/recipeModel.js';
 import User from '../models/userModel.js';
 import Temperature from '../models/temperatureModel.js';
 import Lot from '../models/lotModel.js';
+import LoginHistory from '../models/loginHistoryModel.js';
 
 User.hasMany(Recipe, {
   foreignKey: 'userId',
@@ -40,4 +41,12 @@ Recipe.hasMany(Lot, {
 
 Lot.belongsTo(Recipe, {
   foreignKey: 'recipeId',
+});
+
+User.hasMany(LoginHistory, {
+  foreignKey: 'userId',
+});
+
+LoginHistory.belongsTo(User, {
+  foreignKey: 'userId',
 });

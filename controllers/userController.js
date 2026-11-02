@@ -7,6 +7,7 @@
 // O telefone é aceito e devolvido em camelCase, igual ao model e ao contrato público.
 // code-wiki:end
 import userService from '../services/userService.js';
+import loginHistoryService from '../services/loginHistoryService.js';
 import { createHash } from '../services/argon2.js';
 import cloudinary from '../config/cloudinary.js';
 
@@ -152,4 +153,13 @@ const updateImage = async (req, res) => {
   }
 };
 
-export { createUser, showUser, deleteUser, updateUser, updateImage };
+const showLoginHistory = async (req, res) => {
+  try {
+    const loginHistory = await loginHistoryService.listByUser(req.userId);
+    res.status(200).json({ loginHistory });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+};
+
+export { createUser, showUser, deleteUser, updateUser, updateImage, showLoginHistory };

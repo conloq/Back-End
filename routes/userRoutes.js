@@ -12,6 +12,7 @@ import {
   deleteUser,
   updateUser,
   updateImage,
+  showLoginHistory,
 } from '../controllers/userController.js';
 import login from '../controllers/authController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
@@ -40,6 +41,7 @@ router.post('/login', login);
 router.post('/user', createUser);
 
 router.get('/user', authMiddleware, showUser);
+router.get('/user/login-history', authMiddleware, showLoginHistory);
 router.delete('/user', authMiddleware, deleteUser);
 router.put('/user', authMiddleware, updateUser);
 
