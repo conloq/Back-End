@@ -9,7 +9,8 @@
     "prestart": "npm run db:migrate",
     "db:migrate": "npx sequelize-cli db:migrate",
     "db:migrate:undo": "npx sequelize-cli db:migrate:undo",
-    "db:migrate:undo:all": "npx sequelize-cli db:migrate:undo:all"
+    "db:migrate:undo:all": "npx sequelize-cli db:migrate:undo:all",
+    "db:seed": "node scripts/seed-local.js"
   },
   "repository": {
     "type": "git",
