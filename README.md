@@ -19,22 +19,25 @@ npm install
 cp .env.example .env # preencha as variáveis obrigatórias (ver abaixo)
 # o banco precisa existir antes: CREATE DATABASE mash;
 npm run db:migrate   # aplica as migrations pendentes
-npm run db:seed      # opcional, só local: usuário teste@teste.com / 123 com receitas, rampas e lotes
-npm start            # aplica migrations via prestart e inicia em PORT (local: 8080)
+npm run db:seed      # opcional, só com NODE_ENV=development: usuário teste@teste.com / 123 com receitas, rampas e lotes
+npm run dev          # aplica migrations e inicia com nodemon (recarrega ao salvar) em PORT (local: 8080)
 ```
+
+`npm start` é o modo de produção: aplica migrations via `prestart` e inicia com `node app.js`, sem nodemon. O `nodemon` fica em `devDependencies`.
 
 Render define `PORT`; localmente a API usa 8080 por padrão. O frontend local usa a porta 4000.
 
 ## Variáveis de ambiente (`.env`: NUNCA commitar valores reais)
 
 ```
+NODE_ENV, PORT, FRONTEND_URL,
 DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_SSL, DB_SSL_CA, DB_DATABASE,
-JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY,
-FRONTEND_URL
+JWT_SECRET_KEY, CLOUD_NAME, API_KEY_CLOUDINARY, API_SECRET_KEY_CLOUDINARY
 ```
 
-Copie o `.env.example` para `.env` e preencha as variáveis do ambiente.
-A API não sobe sem `DB_HOST`, `DB_USERNAME`, `DB_DATABASE`, `JWT_SECRET_KEY`, `CLOUD_NAME`, `API_KEY_CLOUDINARY` e `API_SECRET_KEY_CLOUDINARY`: o boot lista as ausentes e encerra. As três do Cloudinary são exigidas mesmo para testar rotas que não enviam imagem. As demais têm padrão: `DB_PORT` 3306, `DB_PASSWORD` vazia, `DB_SSL` desligado e `FRONTEND_URL` `http://localhost:4000`.
+Copie o `.env.example` para `.env` e preencha as variáveis do ambiente. No `.env` local use `NODE_ENV=development`; no Render, `NODE_ENV=production`.
+A API não sobe sem `DB_HOST`, `DB_USERNAME`, `DB_DATABASE` e `JWT_SECRET_KEY`: o boot lista as ausentes e encerra. `CLOUD_NAME`, `API_KEY_CLOUDINARY` e `API_SECRET_KEY_CLOUDINARY` também são obrigatórias, exceto com `NODE_ENV=development`: aí, sem elas, a API sobe com um aviso e só `PUT /user/upload` (foto de perfil) responde `503`. Qualquer outro valor de `NODE_ENV`, ou nenhum, mantém a regra de produção. As demais têm padrão: `DB_PORT` 3306, `DB_PASSWORD` vazia, `DB_SSL` desligado e `FRONTEND_URL` `http://localhost:4000`.
+O `npm run db:seed` só roda com `NODE_ENV=development`; em qualquer outro ambiente ele se recusa e encerra sem tocar o banco.
 Nunca versione o `.env` nem preencha segredos no arquivo de exemplo.
 
 ## Padrão de resposta (decisão da equipe: base: aula-05 DW3)
@@ -85,8 +88,9 @@ A especificação dos endpoints do depósito do PI (03/11/2026) está nas issues
 | ---------------------------------------------------- | ---------------------------------------------------------------- |
 | `CREATE DATABASE mash;`                              | Cria o banco vazio uma vez; a API não cria o banco               |
 | `npm run db:migrate`                                 | Aplica as migrations pendentes na ordem dos arquivos             |
-| `npm run db:seed`                                    | Recria o usuário de teste local; não usar no banco publicado     |
-| `npm start`                                          | Aplica migrations pelo `prestart` e inicia a API                 |
+| `npm run db:seed`                                    | Recria o usuário de teste; só roda com `NODE_ENV=development`    |
+| `npm run dev`                                        | Aplica migrations e inicia a API com nodemon (desenvolvimento)   |
+| `npm start`                                          | Aplica migrations pelo `prestart` e inicia com `node` (produção) |
 | `npx sequelize-cli db:migrate:status`                | Lista migrations aplicadas e pendentes                           |
 | `npm run db:migrate:undo`                            | Desfaz a última migration no ambiente local                      |
 | `npm run db:migrate:undo:all`                        | Desfaz todas no ambiente local; não usar no banco publicado      |

@@ -1,6 +1,7 @@
 // code-wiki:start
 // Summary: Monta a API REST do Mash: exige as variáveis de ambiente, testa o banco e publica os routers de usuário, receita, rampa, lote e documentação.
 // Description: Antes de abrir a porta, o processo confere as variáveis de banco, de assinatura de token e de credenciais de nuvem; sem qualquer uma delas imprime a lista de ausentes e encerra.
+// Com NODE_ENV=development as credenciais de nuvem viram opcionais: a API sobe e só a troca de foto fica desativada.
 // O endpoint de saúde responde apenas com a mensagem de estado, sem tocar o banco, para distinguir indisponibilidade de rota ausente.
 // O CORS libera a origem do frontend para leitura, escrita e preflight, permitindo o cabeçalho de autorização.
 // Os routers de domínio são montados na mesma aplicação, e as associações entre models são carregadas no arranque.
@@ -8,20 +9,27 @@
 // code-wiki:end
 import express from 'express';
 import 'dotenv/config';
+import { CLOUDINARY_VARS, cloudinaryConfigurado } from './config/cloudinary.js';
+
+// Só NODE_ENV=development relaxa o Cloudinary; qualquer outro valor (ou nenhum) mantém a regra de produção
+const emDesenvolvimento = process.env.NODE_ENV === 'development';
 
 const obrigatorias = [
   'DB_HOST',
   'DB_USERNAME',
   'DB_DATABASE',
   'JWT_SECRET_KEY',
-  'CLOUD_NAME',
-  'API_KEY_CLOUDINARY',
-  'API_SECRET_KEY_CLOUDINARY',
+  ...(emDesenvolvimento ? [] : CLOUDINARY_VARS),
 ];
 const ausentes = obrigatorias.filter((nome) => !process.env[nome]);
 if (ausentes.length) {
   console.error(`Variáveis de ambiente ausentes: ${ausentes.join(', ')}`);
   process.exit(1);
+}
+if (emDesenvolvimento && !cloudinaryConfigurado()) {
+  console.warn(
+    'Cloudinary não configurado: a troca de foto de perfil responde 503 neste ambiente.',
+  );
 }
 
 import { authDB } from './config/data-base.js';

@@ -9,7 +9,7 @@
 import userService from '../services/userService.js';
 import loginHistoryService from '../services/loginHistoryService.js';
 import { createHash } from '../services/argon2.js';
-import cloudinary from '../config/cloudinary.js';
+import cloudinary, { cloudinaryConfigurado } from '../config/cloudinary.js';
 
 const isValidEmail = (email) => {
   if (/\s/.test(email)) return false;
@@ -130,6 +130,11 @@ const updateImage = async (req, res) => {
     const image = req.file;
 
     if (!image) return res.status(400).json({ error: 'Imagem não foi enviada' });
+
+    // Em desenvolvimento o Cloudinary é opcional; sem credenciais, o upload fica desativado
+    if (!cloudinaryConfigurado()) {
+      return res.status(503).json({ error: 'Upload de imagem desativado neste ambiente' });
+    }
 
     const resultCloudinary = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
