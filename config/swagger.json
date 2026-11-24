@@ -704,6 +704,22 @@
               }
             }
           },
+          "503": {
+            "description": "Upload desativado: Cloudinary não configurado (só em NODE_ENV=development)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["error"],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "500": {
             "description": "Erro interno ou falha do provedor",
             "content": {

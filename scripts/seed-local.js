@@ -57,6 +57,13 @@ function hhmmss(t) {
 }
 
 async function main() {
+  // Opt-in explícito: sem NODE_ENV=development (ex.: banco publicado) o seed não roda
+  if (process.env.NODE_ENV !== 'development') {
+    console.error('Seed bloqueado: defina NODE_ENV=development no .env local para rodar.');
+    process.exitCode = 1;
+    await Connection.close();
+    return;
+  }
   await Connection.authenticate();
   const t = await Connection.transaction();
   try {
